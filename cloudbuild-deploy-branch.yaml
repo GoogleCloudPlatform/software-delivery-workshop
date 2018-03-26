@@ -20,7 +20,7 @@ steps:
       
         gcloud container clusters get-credentials "$${CLUSTER}" \
           --project "$${PROJECT}" \
-          --zone "$${ZONE}"
+          --zone "$${ZONE}"  
 
 
         kubectl get ns ${BRANCH_NAME} || kubectl create ns ${BRANCH_NAME}
