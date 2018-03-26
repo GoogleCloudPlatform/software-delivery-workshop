@@ -40,6 +40,16 @@ steps:
           > helloworld.yaml
         mv helloworld.yaml kubernetes/deployments/helloworld.yaml
 
+        cat <<EOF > patch-svc.yaml
+          metadata:
+            namespace: ${BRANCH_NAME}
+        EOF
+        kubectl patch --local -o yaml \
+          -f kubernetes/services/helloworld.yaml \
+          -p "$(cat patch-svc.yaml)" \
+          > helloworld.yaml
+        mv helloworld.yaml kubernetes/deployments/helloworld.yaml
+
     volumes:
       - name: 'kube'
         path: /kube
