@@ -25,6 +25,8 @@ steps:
         kubectl get ns ${BRANCH_NAME} || kubectl create ns ${BRANCH_NAME}
 
         cat <<EOF > patch.yaml
+          metadata:
+            namespace: ${BRANCH_NAME}
           spec:
             template:
               spec:
