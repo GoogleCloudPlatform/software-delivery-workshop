@@ -50,7 +50,7 @@ steps:
           > helloworld.yaml
         mv helloworld.yaml kubernetes/services/helloworld.yaml
 
-        git branch
+        git branch  
 
     volumes:
       - name: 'kube'
