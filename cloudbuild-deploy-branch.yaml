@@ -48,7 +48,7 @@ steps:
           -f kubernetes/services/helloworld.yaml \
           -p "$(cat patch-svc.yaml)" \
           > helloworld.yaml
-        mv helloworld.yaml kubernetes/deployments/helloworld.yaml
+        mv helloworld.yaml kubernetes/services/helloworld.yaml
 
     volumes:
       - name: 'kube'
