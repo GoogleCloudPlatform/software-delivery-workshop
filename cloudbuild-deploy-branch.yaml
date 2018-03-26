@@ -22,7 +22,6 @@ steps:
           --project "$${PROJECT}" \
           --zone "$${ZONE}"  
 
-
         kubectl get ns ${BRANCH_NAME} || kubectl create ns ${BRANCH_NAME}
 
         cat <<EOF > patch.yaml
