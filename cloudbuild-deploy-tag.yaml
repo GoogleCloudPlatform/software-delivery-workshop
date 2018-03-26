@@ -53,3 +53,5 @@ steps:
     volumes:
       - name: 'kube'
         path: /kube
+images:
+- 'gcr.io/${PROJECT_ID}/helloworld:${TAG_NAME}'
