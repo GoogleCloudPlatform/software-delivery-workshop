@@ -1,0 +1,34 @@
+steps:
+  # Generate a kubeconfig file for the given GKE cluster.
+  - name: 'gcr.io/cloud-builders/kubectl'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
+      - 'KUBECONFIG=/kube/config'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        CLUSTER=$$(gcloud config get-value container/cluster)
+        PROJECT=$$(gcloud config get-value core/project)
+        ZONE=$$(gcloud config get-value compute/zone)
+      
+        gcloud container clusters get-credentials "$${CLUSTER}" \
+          --project "$${PROJECT}" \
+          --zone "$${ZONE}"
+    volumes:
+      - name: 'kube'
+        path: /kube
+
+  # Apply the Kubernetes configuration files.
+  - name: 'gcr.io/cloud-builders/gcloud'
+    env:
+      - 'KUBECONFIG=/kube/config'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        kubectl apply --recursive -f kubernetes
+    volumes:
+      - name: 'kube'
+        path: /kube
