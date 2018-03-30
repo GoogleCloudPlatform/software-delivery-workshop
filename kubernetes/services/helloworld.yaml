@@ -2,7 +2,6 @@ kind: Service
 apiVersion: v1
 metadata:
   name: helloworld
-  namespace: default
 spec:
   selector:
     app: helloworld

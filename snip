@@ -1,0 +1,18 @@
+sed -i.bak 's#gcr.io/cloud-solutions-images/gceme:1.0.0#${imageTag}#' ./k8s/canary/*.yaml
+
+
+##### Tweak versions
+  - id: 'Apply changes to k8s.yaml'
+    name: 'ubuntu'
+    args: [
+      'sed', '-i',
+      's|gcr.io/$PROJECT_ID/$_IMAGE_NAME:.*|gcr.io/$PROJECT_ID/$_IMAGE_NAME:$SHORT_SHA|g',
+      'k8s/k8s.yaml'
+    ]
+
+  - id: 'Kubectl apply'
+    name: 'gcr.io/cloud-builders/kubectl'
+    args: ['apply', '-f', 'k8s/k8s.yaml']
+    env:
+    - 'CLOUDSDK_COMPUTE_ZONE=$_ZONE'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=$_CLUSTER'
