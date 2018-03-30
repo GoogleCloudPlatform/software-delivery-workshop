@@ -67,7 +67,7 @@ steps:
             # Canary Deploy
             TARGET_ENV="canary"
             NS="default"
-          else
+          else 
             # Dev Deploy
             TARGET_ENV="dev"
             NS=$${THEBRANCH}
