@@ -46,7 +46,7 @@ steps:
           PROJECT=$$(gcloud config get-value core/project)
           ZONE=$$(gcloud config get-value compute/zone)
           
-          VERSION=${_TAG_NAME}
+
           [[ "$BRANCH_NAME" ]] && VERSION=${BRANCH_NAME}-${SHORT_SHA}
           [[ "$TAG_NAME" ]] && VERSION=$TAG_NAME
           
