@@ -78,5 +78,3 @@ steps:
           kubectl get ns $${NS} || kubectl create ns $${NS}
           kubectl apply --namespace $${NS} --recursive -f kubernetes/deployments/$${TARGET_ENV}
 
-images:
-- 'gcr.io/$PROJECT_ID/helloworld:$${VERSION}'
