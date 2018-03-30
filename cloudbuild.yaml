@@ -24,8 +24,6 @@ steps:
     args: 
       - '-c'
       - |
-          [[ "$BRANCH_NAME" ]] && VERSION=${BRANCH_NAME}-${SHORT_SHA}
-          [[ "$TAG_NAME" ]] && VERSION=$TAG_NAME
           docker push gcr.io/$PROJECT_ID/helloworld:$${VERSION}
 
 
