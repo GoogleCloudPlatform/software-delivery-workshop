@@ -57,7 +57,7 @@ steps:
 
           
 
-          if [[ $${THEBRANCH} == "prod" ]] ; then
+          if [[ $${THEBRANCH} == "master" ]] || [[ "$TAG_NAME" ]] ; then
             # Production Deploy
             TARGET_ENV="prod"
             NS="default"
