@@ -50,6 +50,7 @@ steps:
           [[ "$TAG_NAME" ]] && VERSION=$TAG_NAME
           
           BRANCH=$BRANCH_NAME
+          echo $BRANCH_NAME
 
           gcloud container clusters get-credentials "$${CLUSTER}" \
             --project "$${PROJECT}" \
