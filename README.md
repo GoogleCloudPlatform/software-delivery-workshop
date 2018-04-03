@@ -22,18 +22,46 @@ Cleanup
 ```
 
 ---
-Cloud Builder
+
+# GKE
+
+
+
+## Set Variables
 
 ```
-export $PROJECT_ID = $PROJECT
-gcloud config set core/project $PROJECT_ID
+ 
+    export PROJECT=[[YOUR PROJECT NAME]]
+    # On Cloudshell
+    # export PROJECT=$(gcloud info --format='value(config.project)')
+    export CLUSTER=gke-deploy-example-cluster
+    export ZONE=us-central1-a
 
-
+```
+## Create Cluster
 
 ```
 
+    gcloud container clusters create ${CLUSTER} \
+    --project=${PROJECT} \
+    --zone=${ZONE} \
+    --quiet
 
-Local Cloud Builder
+```
+
+## Get Credentials
+
+```
+    gcloud container clusters get-credentials ${CLUSTER} \
+    --project=${PROJECT} \
+    --zone=${ZONE}
+
+```
+
+# Cloud Builder
+
+
+## Local Cloud Builder
 
 Install the local builder
 ```
@@ -42,45 +70,71 @@ gcloud components install container-builder-local
 
 Build locally
 ```
-container-builder-local --config=cloudbuild.yaml --dryrun=false  .
 
-container-builder-local --config cloudbuild-deploy.yaml --dryrun=false  --write-workspace=build_assets  --substitutions=_CLOUDSDK_COMPUTE_ZONE=us-central1-a,_CLOUDSDK_CONTAINER_CLUSTER=cluster-1 .
 
-container-builder-local --config cloudbuild-deploy-patch.yaml --dryrun=false  --write-workspace=build_assets  --substitutions=_CLOUDSDK_COMPUTE_ZONE=us-central1-a,_CLOUDSDK_CONTAINER_CLUSTER=cluster-1,_TAG_NAME=12 .
+container-builder-local --config cloudbuild-cli.yaml \
+    --dryrun=false  \
+    --write-workspace=build_assets  \
+    --substitutions=_CLOUDSDK_COMPUTE_ZONE=${ZONE},_CLOUDSDK_CONTAINER_CLUSTER=${CLUSTER},_TAG_NAME=18 \
+    .
 ```
 
 
 
-Build in the cloud
+## Build in the cloud
 
-```
-
-gcloud container builds submit --config cloudbuild.yaml .
-
-```
 
 For `kubectl` commands against GKE youll need to give Container Builder Service Account container.developer role access on your clusters [details](https://github.com/GoogleCloudPlatform/cloud-builders/tree/master/kubectl).
 
 ```
-PROJECT="$(gcloud projects describe \
+PROJECT_NUMBER="$(gcloud projects describe \
     $(gcloud config get-value core/project -q) --format='get(projectNumber)')"
 
-gcloud projects add-iam-policy-binding $PROJECT \
-    --member=serviceAccount:$PROJECT@cloudbuild.gserviceaccount.com \
+gcloud projects add-iam-policy-binding ${PROJECT} \
+    --member=serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com \
     --role=roles/container.developer
 
 ```
 
 
-Deploy to GKE
+Deploy to GKE from Command line
 
 ```
-gcloud container builds submit --config cloudbuild-deploy.yaml --substitutions=_CLOUDSDK_COMPUTE_ZONE=us-central1-a,_CLOUDSDK_CONTAINER_CLUSTER=cluster-1 .
+gcloud container builds submit \
+    --config cloudbuild-cli.yaml \
+    --substitutions=_CLOUDSDK_COMPUTE_ZONE=${ZONE},_CLOUDSDK_CONTAINER_CLUSTER=${CLUSTER},_TAG_NAME=16 .
 
 ```
 
-Dev Patch
+Deploy to GKE from a Github Push
 
-```
-gcloud container builds submit --config cloudbuild-deploy-patch.yaml  --substitutions=_CLOUDSDK_COMPUTE_ZONE=us-central1-a,_CLOUDSDK_CONTAINER_CLUSTER=cluster-1,_TAG_NAME=12 .
-```
+Trigger setup instructions: https://cloud.google.com/container-builder/docs/running-builds/automate-builds
+
+
+Container registry page
+https://console.cloud.google.com/gcr?_ga=2.177339745.-595360065.1522415212
+Select your project and click Open.
+In the left nav, click Build triggers.
+Click Create trigger.
+Select Github
+Select select the repository, then click Continue.
+
+Enter the following trigger settings:
+- Trigger Name: An optional name for your trigger.
+- Trigger Type: Branch (You can setup Tag separatly later)
+
+Build configuration select cloudbuild.yaml
+- Enter cloudbuild.yaml for the value
+
+Substitution variables
+- Click add item and input
+    - Variable: _CLOUDSDK_COMPUTE_ZONE  
+    - Value: us-central1-a (or whatever zone you used above)
+- Click add item again and input
+    - Variable: _CLOUDSDK_CONTAINER_CLUSTER
+    - Value: gke-deploy-example-cluster
+
+Click Create Trigger
+
+Test it: To the right of the entry you just created click Run Trigger, and select Master
+View progress on the Builds Page: https://console.cloud.google.com/gcr/builds
