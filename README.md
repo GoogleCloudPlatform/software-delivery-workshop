@@ -112,23 +112,9 @@ gcloud container builds submit \
 
 ```
 
-Deploy to GKE from a Github Push
+## Cloud Build & Deploy of Branch Push
 
-
-
-Setup Triggers
-
-gcloud auth application-default login
-
-
-
-
-
-
-
-
-Trigger setup instructions: https://cloud.google.com/container-builder/docs/running-builds/automate-builds
-
+This trigger will deploy any branch other than master to its own namespace. 
 
 Container registry page
 https://console.cloud.google.com/gcr?_ga=2.177339745.-595360065.1522415212
@@ -140,10 +126,11 @@ Select select the repository, then click Continue.
 
 Enter the following trigger settings:
 - Trigger Name: An optional name for your trigger.
-- Trigger Type: Branch (You can setup Tag separatly later)
+- Trigger Type: Branch 
+    - Branch (regex): [^(?!.*master).*
 
 Build configuration select cloudbuild.yaml
-- Enter cloudbuild.yaml for the value
+- Enter cloudbuild-dev.yaml for the value
 
 Substitution variables
 - Click add item and input
@@ -155,16 +142,30 @@ Substitution variables
 
 Click Create Trigger
 
-Test it: To the right of the entry you just created click Run Trigger, and select Master
+Test it: To the right of the entry you just created click Run Trigger, and select a branch
 View progress on the Builds Page: https://console.cloud.google.com/gcr/builds
 
 
+## Cloud Build & Deploy of Master Commit
+
+This trigger will deploy commits to master to a canary server in production. 
+ 
+Follow the above instructions but use:
+
+- Trigger Type: Branch 
+    - Branch (regex): master
+Build configuration select cloudbuild.yaml
+- Enter cloudbuild-canary.yaml for the value
+
+## Cloud Build & Deploy of a Tag
+This trigger will deploy repository Tags to live servers in production
+ 
+Follow the above instructions but use:
+
+- Trigger Type: Tag 
+    - Branch (regex): .*
+Build configuration select cloudbuild.yaml
+- Enter cloudbuild-prod.yaml for the value
 
 
 
-
----
-### Notes
-
-gcloud config unset container/use_client_certificate
-gcloud container clusters get-credentials ${CLUSTER}     --project=${PROJECT}     --zone=${ZONE}
