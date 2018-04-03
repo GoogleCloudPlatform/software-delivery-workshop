@@ -49,28 +49,27 @@ steps:
           [[ "$BRANCH_NAME" ]] && VERSION=${BRANCH_NAME}-${SHORT_SHA}
           [[ "$TAG_NAME" ]] && VERSION=$TAG_NAME
           
-          THEBRANCH=$BRANCH_NAME
+          BRANCH=$BRANCH_NAME
 
           gcloud container clusters get-credentials "$${CLUSTER}" \
             --project "$${PROJECT}" \
             --zone "$${ZONE}"  
 
-          
 
-          if [[ $${THEBRANCH} == "master" ]] || [[ "$TAG_NAME" ]] ; then
+          if [[ $${BRANCH_NAME} == "master" ]] || [[ "$TAG_NAME" ]] ; then
             # Production Deploy
             TARGET_ENV="prod"
             NS="default"
 
-          elif [[ $${THEBRANCH} == "canary" ]] ; then
+          elif [[ $${BRANCH_NAME} == "canary" ]] ; then
             # Canary Deploy
             TARGET_ENV="canary"
             NS="default"
           else 
             # Dev Deploy
             TARGET_ENV="dev"
-            NS=$${THEBRANCH}
-            VERSION=$${THEBRANCH}-$${VERSION}
+            NS=$${BRANCH_NAME}
+            VERSION=$${BRANCH_NAME}-$${VERSION}
           fi
 
           sed -i 's|gcr.io/$PROJECT_ID/helloworld:.*|gcr.io/$PROJECT_ID/helloworld:$${VERSION}|' ./kubernetes/deployments/$${TARGET_ENV}/*.yaml
