@@ -6,7 +6,7 @@ The example here follows a pattern where:
 - developers use cloud servers during local development
 - all lower lifecycle testing occurs on branches other than master
 - merges to master indicate a readiness for a canary (beta) deployment in production
-- a tagged release indicates the canary deploy is fully signed off nad rolled out to all remaining servers
+- a tagged release indicates the canary deploy is fully signed off and rolled out to all remaining servers
 
 
 There are 5 scripts included as part of the demo:
@@ -59,26 +59,6 @@ There are 5 scripts included as part of the demo:
 # Cloud Builder
 
 
-## Local Cloud Builder
-
-Install the local builder
-```
-gcloud components install container-builder-local
-```
-
-Build locally
-```
-
-
-container-builder-local --config cloudbuild-cli.yaml \
-    --dryrun=false  \
-    --write-workspace=build_assets  \
-    --substitutions=_CLOUDSDK_COMPUTE_ZONE=${ZONE},_CLOUDSDK_CONTAINER_CLUSTER=${CLUSTER},_TAG_NAME=18 \
-    .
-```
-
-
-
 ## Build in the cloud
 
 
@@ -95,7 +75,7 @@ gcloud projects add-iam-policy-binding ${PROJECT} \
 ```
 
 
-### Cloud Build & Deploy of local content
+### Build & Deploy of local content
 
 The following submits a build to cloud builder and deploys the results to a user's namespace.
 
@@ -107,38 +87,37 @@ gcloud container builds submit \
 
 ```
 
-## Cloud Build & Deploy of Branch Push
+## Build & Deploy of Branch Push
 
 This trigger will deploy any branch other than master to its own namespace. 
 
-Container registry page
-https://console.cloud.google.com/gcr?_ga=2.177339745.-595360065.1522415212
-Select your project and click Open.
-In the left nav, click Build triggers.
-Click Create trigger.
-Select Github
-Select select the repository, then click Continue.
+- Open the [Container registry page](https://console.cloud.google.com/gcr)
+- Select your project and click Open.
+- In the left nav, click Build triggers.
+- Click Create trigger.
+- Select **Github**
+- Select select the repository, then click Continue.
 
 Enter the following trigger settings:
 - Trigger Name: An optional name for your trigger.
-- Trigger Type: Branch 
-    - Branch (regex): [^(?!.*master).*
+- Trigger Type: **Branch** 
+- Branch (regex): `[^(?!.*master)].*`
 
-Build configuration select cloudbuild.yaml
-- Enter cloudbuild-dev.yaml for the value
+Build configuration select **cloudbuild.yaml**
+- Enter `cloudbuild-dev.yaml` for the value
 
 Substitution variables
 - Click add item and input
-    - Variable: _CLOUDSDK_COMPUTE_ZONE  
-    - Value: us-central1-a (or whatever zone you used above)
+    - Variable: `_CLOUDSDK_COMPUTE_ZONE`  
+    - Value: `us-central1-a` (or whatever zone you used above)
 - Click add item again and input
-    - Variable: _CLOUDSDK_CONTAINER_CLUSTER
-    - Value: gke-deploy-example-cluster
+    - Variable: `_CLOUDSDK_CONTAINER_CLUSTER`
+    - Value: `gke-deploy-example-cluster`
 
 Click Create Trigger
 
 Test it: To the right of the entry you just created click Run Trigger, and select a branch
-View progress on the Builds Page: https://console.cloud.google.com/gcr/builds
+View progress on the [Build History Page](https://console.cloud.google.com/gcr/builds) 
 
 
 ## Cloud Build & Deploy of Master Commit
@@ -147,20 +126,20 @@ This trigger will deploy commits to master to a canary server in production.
  
 Follow the above instructions but use:
 
-- Trigger Type: Branch 
-    - Branch (regex): master
-Build configuration select cloudbuild.yaml
-- Enter cloudbuild-canary.yaml for the value
+- Trigger Type: **Branch**
+    - Branch (regex): `master`
+Build configuration select **cloudbuild.yaml**
+- Enter `cloudbuild-canary.yaml` for the value
 
 ## Cloud Build & Deploy of a Tag
 This trigger will deploy repository Tags to live servers in production
  
 Follow the above instructions but use:
 
-- Trigger Type: Tag 
-    - Branch (regex): .*
-Build configuration select cloudbuild.yaml
-- Enter cloudbuild-prod.yaml for the value
+- Trigger Type: **Tag** 
+    - Branch (regex): `.*`
+Build configuration select **cloudbuild.yaml**
+- Enter `cloudbuild-prod.yaml` for the value
 
 
 
