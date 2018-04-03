@@ -17,7 +17,7 @@ spec:
         version: v1
     spec:
       containers:
-      - image: gcr.io/crg-gcp/quickstart-image:1.0.0
+      - image: gcr.io/$PROJECT_ID/helloworld:1.0.0
         name: helloworld
         ports:
         - containerPort: 80

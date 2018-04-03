@@ -37,6 +37,8 @@ Cleanup
     export CLUSTER=gke-deploy-example-cluster
     export ZONE=us-central1-a
 
+    gcloud config set compute/zone $ZONE
+
 ```
 ## Create Cluster
 
@@ -48,6 +50,7 @@ Cleanup
     --quiet
 
 ```
+
 
 ## Get Credentials
 
@@ -97,16 +100,32 @@ gcloud projects add-iam-policy-binding ${PROJECT} \
 ```
 
 
-Deploy to GKE from Command line
+### Cloud Build & Deploy of local content
+
+The following submits a build to cloud builder and deploys the results to a user's namespace.
 
 ```
 gcloud container builds submit \
-    --config cloudbuild-cli.yaml \
-    --substitutions=_CLOUDSDK_COMPUTE_ZONE=${ZONE},_CLOUDSDK_CONTAINER_CLUSTER=${CLUSTER},_TAG_NAME=16 .
+    --config cloudbuild-local.yaml \
+    --substitutions=_VERSION=someversion,_USER=$(whoami),_CLOUDSDK_COMPUTE_ZONE=${ZONE},_CLOUDSDK_CONTAINER_CLUSTER=${CLUSTER} .
+
 
 ```
 
 Deploy to GKE from a Github Push
+
+
+
+Setup Triggers
+
+gcloud auth application-default login
+
+
+
+
+
+
+
 
 Trigger setup instructions: https://cloud.google.com/container-builder/docs/running-builds/automate-builds
 
@@ -138,3 +157,14 @@ Click Create Trigger
 
 Test it: To the right of the entry you just created click Run Trigger, and select Master
 View progress on the Builds Page: https://console.cloud.google.com/gcr/builds
+
+
+
+
+
+
+---
+### Notes
+
+gcloud config unset container/use_client_certificate
+gcloud container clusters get-credentials ${CLUSTER}     --project=${PROJECT}     --zone=${ZONE}

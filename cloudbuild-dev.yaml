@@ -1,0 +1,57 @@
+steps:
+
+### Build
+
+  - id: 'build'
+    name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args: 
+      - '-c'
+      - |
+          docker build -t gcr.io/$PROJECT_ID/helloworld:${BRANCH_NAME}-${SHORT_SHA} .
+
+
+
+### Test
+
+
+### Publish
+  - id: 'publish'
+    name: 'gcr.io/cloud-builders/docker'
+    entrypoint: 'bash'
+    args: 
+      - '-c'
+      - |
+          docker push gcr.io/$PROJECT_ID/helloworld:${BRANCH_NAME}-${SHORT_SHA}
+
+
+
+### Deploy
+  - id: 'deploy'
+    name: 'gcr.io/cloud-builders/gcloud'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
+      - 'KUBECONFIG=/kube/config'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+          CLUSTER=$$(gcloud config get-value container/cluster)
+          PROJECT=$$(gcloud config get-value core/project)
+          ZONE=$$(gcloud config get-value compute/zone)
+          
+          gcloud container clusters get-credentials "$${CLUSTER}" \
+            --project "$${PROJECT}" \
+            --zone "$${ZONE}"  
+
+
+          
+          
+
+          sed -i 's|gcr.io/$PROJECT_ID/helloworld:.*|gcr.io/$PROJECT_ID/helloworld:${BRANCH_NAME}-${SHORT_SHA}|' ./kubernetes/deployments/dev/*.yaml
+          
+          kubectl get ns ${BRANCH_NAME} || kubectl create ns ${BRANCH_NAME}
+          kubectl apply --namespace $${NS} --recursive -f kubernetes/deployments/dev
+          kubectl apply --namespace $${NS} --recursive -f kubernetes/services
+
