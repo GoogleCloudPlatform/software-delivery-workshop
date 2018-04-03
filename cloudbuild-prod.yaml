@@ -8,9 +8,7 @@ steps:
     args: 
       - '-c'
       - |
-          [[ "$BRANCH_NAME" ]] && VERSION=${BRANCH_NAME}-${SHORT_SHA}
-          [[ "$TAG_NAME" ]] && VERSION=$TAG_NAME
-          docker build -t gcr.io/$PROJECT_ID/helloworld:$${VERSION} .
+          docker build -t gcr.io/$PROJECT_ID/helloworld:$TAG_NAME .
 
 
 
@@ -24,9 +22,7 @@ steps:
     args: 
       - '-c'
       - |
-          [[ "$BRANCH_NAME" ]] && VERSION=${BRANCH_NAME}-${SHORT_SHA}
-          [[ "$TAG_NAME" ]] && VERSION=$TAG_NAME
-          docker push gcr.io/$PROJECT_ID/helloworld:$${VERSION}
+          docker push gcr.io/$PROJECT_ID/helloworld:$TAG_NAME
 
 
 
@@ -52,25 +48,13 @@ steps:
             --project "$${PROJECT}" \
             --zone "$${ZONE}"  
 
-
-          if [[ ${BRANCH_NAME} == "master" ]] || [[ "$TAG_NAME" ]] ; then
-            # Production Deploy
             TARGET_ENV="prod"
             NS="default"
 
-          elif [[ ${BRANCH_NAME} == "canary" ]] ; then
-            # Canary Deploy
-            TARGET_ENV="canary"
-            NS="default"
-          else 
-            # Dev Deploy
-            TARGET_ENV="dev"
-            NS=$${BRANCH_NAME}
-            VERSION=$${BRANCH_NAME}-$${VERSION}
-          fi
 
-          sed -i 's|gcr.io/$PROJECT_ID/helloworld:.*|gcr.io/$PROJECT_ID/helloworld:$${VERSION}|' ./kubernetes/deployments/$${TARGET_ENV}/*.yaml
+          sed -i 's|gcr.io/$PROJECT_ID/helloworld:.*|gcr.io/$PROJECT_ID/helloworld:$TAG_NAME|' ./kubernetes/deployments/prod/*.yaml
           
-          kubectl get ns $${NS} || kubectl create ns $${NS}
-          kubectl apply --namespace $${NS} --recursive -f kubernetes/deployments/$${TARGET_ENV}
+          kubectl get ns default || kubectl create ns default
+          kubectl apply --namespace default --recursive -f kubernetes/deployments/prod
+          kubectl apply --namespace default --recursive -f kubernetes/services
 
