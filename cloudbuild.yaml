@@ -53,12 +53,12 @@ steps:
             --zone "$${ZONE}"  
 
 
-          if [[ ${BRANCH_NAME} == "master" ]] || [[ "$TAG_NAME" ]] ; then
+          if [[ "$TAG_NAME" ]] ; then
             # Production Deploy
             TARGET_ENV="prod"
             NS="default"
 
-          elif [[ ${BRANCH_NAME} == "canary" ]] ; then
+          elif [[ ${BRANCH_NAME} == "master" ]] ; then
             # Canary Deploy
             TARGET_ENV="canary"
             NS="default"
@@ -73,4 +73,5 @@ steps:
           
           kubectl get ns $${NS} || kubectl create ns $${NS}
           kubectl apply --namespace $${NS} --recursive -f kubernetes/deployments/$${TARGET_ENV}
+          kubectl apply --namespace $${NS} --recursive -f kubernetes/services
 

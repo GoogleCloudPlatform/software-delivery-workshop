@@ -1,29 +1,24 @@
-# docker-go-sample
+# GKE Deployments with Cloud Builder
+
+The included scripts are intended to demonstrate how to use Google Cloud Container Builder as a continuous integration system deploying code to GKE. 
+
+The example here follows a pattern where:
+- developers use cloud servers during local development
+- all lower lifecycle testing occurs on branches other than master
+- merges to master indicate a readiness for a canary (beta) deployment in production
+- a tagged release indicates the canary deploy is fully signed off nad rolled out to all remaining servers
 
 
-A simple hello world application to use in deployment demos
+There are 5 scripts included as part of the demo:
+- cloudbuild-local.yaml - used by developers to compile and push local code to cloud servers
+- cloudbuild-dev.yaml - used to deploy any branch to branch namespaces
+- cloudbuild-canary.yaml - used to deploy the master branch to canary servers
+- cloudbuild-prod.yaml - used to push repo tags to remaining production servers
+- cloudbuild.yaml - an all in one script that can be used for branches, master and tags with one configuration
 
 
-Docker Image Build
-
-```
-    $ docker build . -t temp/hello-go
-    $ docker run -d --rm -p 8080:80 temp/hello-go
-    $ open http://localhost:8080
-
-```
 
 
-Cleanup
-
-```
-    $ docker stop $(docker ps -a -q -f "ancestor=temp/hello-go")
-    $ docker rmi temp/hello-go
-```
-
----
-
-# GKE
 
 
 
