@@ -52,6 +52,6 @@ steps:
           sed -i 's|gcr.io/$PROJECT_ID/helloworld:.*|gcr.io/$PROJECT_ID/helloworld:${BRANCH_NAME}-${SHORT_SHA}|' ./kubernetes/deployments/dev/*.yaml
           
           kubectl get ns ${BRANCH_NAME} || kubectl create ns ${BRANCH_NAME}
-          kubectl apply --namespace $${NS} --recursive -f kubernetes/deployments/dev
-          kubectl apply --namespace $${NS} --recursive -f kubernetes/services
+          kubectl apply --namespace ${BRANCH_NAME} --recursive -f kubernetes/deployments/dev
+          kubectl apply --namespace ${BRANCH_NAME} --recursive -f kubernetes/services
 
