@@ -1,0 +1,13 @@
+{
+  "triggerTemplate": {
+    "projectId": "crg-gcp",
+    "repoName": "default",
+    "tagName": ".*"
+  },
+  "description": "tag",
+  "substitutions": {
+    "_CLOUDSDK_COMPUTE_ZONE": "us-central1-a",
+    "_CLOUDSDK_CONTAINER_CLUSTER": "gke-deploy-cluster"
+  },
+  "filename": "builder/cloudbuild-prod.yaml"
+}

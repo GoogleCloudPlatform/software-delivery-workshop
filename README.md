@@ -131,6 +131,7 @@ curl -X POST \
     --data-binary @branch-build-trigger.json
 ```
 
+Master
 ```
 
 cat <<EOF > master-build-trigger.json
@@ -140,7 +141,7 @@ cat <<EOF > master-build-trigger.json
     "repoName": "default",
     "branchName": "master"
   },
-  "description": "branch",
+  "description": "master",
   "substitutions": {
     "_CLOUDSDK_COMPUTE_ZONE": "${ZONE}",
     "_CLOUDSDK_CONTAINER_CLUSTER": "${CLUSTER}"
@@ -155,6 +156,33 @@ curl -X POST \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" \
     --data-binary @master-build-trigger.json
+```
+
+Tag
+```
+
+cat <<EOF > tag-build-trigger.json
+{
+  "triggerTemplate": {
+    "projectId": "${PROJECT}",
+    "repoName": "default",
+    "tagName": ".*"
+  },
+  "description": "tag",
+  "substitutions": {
+    "_CLOUDSDK_COMPUTE_ZONE": "${ZONE}",
+    "_CLOUDSDK_CONTAINER_CLUSTER": "${CLUSTER}"
+  },
+  "filename": "builder/cloudbuild-prod.yaml"
+}
+EOF
+
+
+curl -X POST \
+    https://cloudbuild.googleapis.com/v1/projects/${PROJECT}/triggers \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" \
+    --data-binary @tag-build-trigger.json
 ```
 
 # Cloud Builder
