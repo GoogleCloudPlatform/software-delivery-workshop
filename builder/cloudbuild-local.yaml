@@ -15,7 +15,7 @@ steps:
       - '-c'
       - |
           echo $PROJECT_ID
-          docker build -t gcr.io/$PROJECT_ID/helloworld:${_USER}-${_VERSION} .
+          docker build -t gcr.io/$PROJECT_ID/gceme:${_USER}-${_VERSION} .
 
 
 
@@ -29,7 +29,7 @@ steps:
     args: 
       - '-c'
       - |
-          docker push gcr.io/$PROJECT_ID/helloworld:${_USER}-${_VERSION}
+          docker push gcr.io/$PROJECT_ID/gceme:${_USER}-${_VERSION}
 
 
 ### Deploy
@@ -51,12 +51,12 @@ steps:
             --project "$${PROJECT}" \
             --zone "$${ZONE}"  
 
-          sed -i 's|gcr.io/PROJECT/helloworld:.*|gcr.io/$PROJECT_ID/helloworld:${_USER}-${_VERSION}|' ./kubernetes/deployments/dev/*.yaml
+          sed -i 's|gcr.io/cloud-solutions-images/gceme:.*|gcr.io/$PROJECT_ID/gceme:${_USER}-${_VERSION}|' ./kubernetes/deployments/dev/*.yaml
           
           kubectl get ns ${_USER} || kubectl create ns ${_USER}
           kubectl apply --namespace ${_USER} --recursive -f kubernetes/deployments/dev
           kubectl apply --namespace ${_USER} --recursive -f kubernetes/services
 
-          echo service available at http://`kubectl --namespace=${_USER} get service/helloworld -o jsonpath="{.status.loadBalancer.ingress[0].ip}"`
+          echo service available at http://`kubectl --namespace=${_USER} get service/gceme-frontend -o jsonpath="{.status.loadBalancer.ingress[0].ip}"`
 
         

@@ -8,7 +8,7 @@ steps:
     args: 
       - '-c'
       - |
-          docker build -t gcr.io/$PROJECT_ID/helloworld:${SHORT_SHA} .
+          docker build -t gcr.io/$PROJECT_ID/gceme:${SHORT_SHA} .
 
 
 
@@ -22,7 +22,7 @@ steps:
     args: 
       - '-c'
       - |
-          docker push gcr.io/$PROJECT_ID/helloworld:${SHORT_SHA}
+          docker push gcr.io/$PROJECT_ID/gceme:${SHORT_SHA}
 
 
 
@@ -46,7 +46,7 @@ steps:
             --zone "$${ZONE}"  
          
 
-          sed -i 's|gcr.io/$PROJECT_ID/helloworld:.*|gcr.io/$PROJECT_ID/helloworld:${SHORT_SHA}|' ./kubernetes/deployments/canary/*.yaml
+          sed -i 's|gcr.io/cloud-solutions-images/gceme:.*|gcr.io/$PROJECT_ID/gceme:${SHORT_SHA}|' ./kubernetes/deployments/canary/*.yaml
           
           kubectl apply --namespace default --recursive -f kubernetes/deployments/canary
           kubectl apply --namespace default --recursive -f kubernetes/services
