@@ -1,3 +1,4 @@
+/**
 # Copyright 2015 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,5 +12,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+**/
 
-FROM golang:1.6.3-onbuild
+package main
+
+import (
+	"cloud.google.com/go/compute/metadata"
+	"testing"
+)
+
+func TestGCE(t *testing.T) {
+	i := newInstance()
+	if !metadata.OnGCE() && i.Error != "Not running on GCE" {
+		t.Error("Test not running on GCE, but error does not indicate that fact.")
+	}
+}

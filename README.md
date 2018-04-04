@@ -17,6 +17,16 @@ There are 5 scripts included as part of the demo:
 - cloudbuild.yaml - an all in one script that can be used for branches, master and tags with one configuration
 
 
+This lab shows you how to setup a continuous delivery pipeline for GKE using Google Cloud Container Builder. We’ll run through the following steps
+
+- Create a GKE Cluster
+- Review the application structure
+- Manually deploy the application
+- Create a repository for our source
+- Setup automated triggers in Cloud Builder
+- Automatically deploy Branches to custom namespaces
+- Automatically deploy Master as a canary
+- Automatically deploy Tags to production
 
 
 
@@ -29,7 +39,7 @@ There are 5 scripts included as part of the demo:
     export PROJECT=[[YOUR PROJECT NAME]]
     # On Cloudshell
     # export PROJECT=$(gcloud info --format='value(config.project)')
-    export CLUSTER=gke-deploy-example-cluster
+    export CLUSTER=gke-deploy-cluster
     export ZONE=us-central1-a
 
     gcloud config set compute/zone $ZONE
@@ -53,6 +63,26 @@ There are 5 scripts included as part of the demo:
     gcloud container clusters get-credentials ${CLUSTER} \
     --project=${PROJECT} \
     --zone=${ZONE}
+```
+
+## Deploy the application 
+
+```
+kubectl create ns production
+kubectl apply -f kubernetes/deployments/prod -n production
+kubectl apply -f kubernetes/deployments/canary -n production
+kubectl apply -f kubernetes/services -n production
+
+kubectl scale deployment gceme-frontend-production -n production --replicas 4
+
+kubectl get pods -n production -l app=gceme -l role=frontend
+kubectl get pods -n production -l app=gceme -l role=backend
+
+kubectl get service gceme-frontend -n production
+
+export FRONTEND_SERVICE_IP=$(kubectl get -o jsonpath="{.status.loadBalancer.ingress[0].ip}"  --namespace=production services gceme-frontend)
+
+curl http://$FRONTEND_SERVICE_IP/version
 
 ```
 

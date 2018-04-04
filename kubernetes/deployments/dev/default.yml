@@ -11,5 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-FROM golang:1.6.3-onbuild
+#
+kind: ResourceQuota
+apiVersion: v1
+metadata:
+  name: default
+spec:
+  hard:
+    memory: 2Gi
+    cpu: 2
+    pods: 4
+    services: 2
+    resourcequotas: 1
