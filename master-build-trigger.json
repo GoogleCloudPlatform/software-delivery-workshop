@@ -1,0 +1,13 @@
+{
+  "triggerTemplate": {
+    "projectId": "crg-gcp",
+    "repoName": "default",
+    "branchName": "master"
+  },
+  "description": "branch",
+  "substitutions": {
+    "_CLOUDSDK_COMPUTE_ZONE": "us-central1-a",
+    "_CLOUDSDK_CONTAINER_CLUSTER": "gke-deploy-cluster"
+  },
+  "filename": "builder/cloudbuild-canary.yaml"
+}

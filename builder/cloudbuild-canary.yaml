@@ -48,6 +48,6 @@ steps:
 
           sed -i 's|gcr.io/cloud-solutions-images/gceme:.*|gcr.io/$PROJECT_ID/gceme:${SHORT_SHA}|' ./kubernetes/deployments/canary/*.yaml
           
-          kubectl apply --namespace default --recursive -f kubernetes/deployments/canary
-          kubectl apply --namespace default --recursive -f kubernetes/services
+          kubectl apply --namespace production --recursive -f kubernetes/deployments/canary
+          kubectl apply --namespace production --recursive -f kubernetes/services
 

@@ -86,6 +86,77 @@ curl http://$FRONTEND_SERVICE_IP/version
 
 ```
 
+# Create a repo for the code
+
+```
+gcloud alpha source repos create default
+git init
+git config credential.helper gcloud.sh
+git remote add gcp https://source.developers.google.com/p/[PROJECT]/r/default
+git add .
+git commit -m "Initial Commit"
+git push gcp master
+
+```
+
+# Setup triggers
+```
+gcloud auth application-default login
+
+```
+Branch
+```
+
+cat <<EOF > branch-build-trigger.json
+{
+  "triggerTemplate": {
+    "projectId": "${PROJECT}",
+    "repoName": "default",
+    "branchName": "[^(?!.*master)].*"
+  },
+  "description": "branch",
+  "substitutions": {
+    "_CLOUDSDK_COMPUTE_ZONE": "${ZONE}",
+    "_CLOUDSDK_CONTAINER_CLUSTER": "${CLUSTER}"
+  },
+  "filename": "builder/cloudbuild-dev.yaml"
+}
+EOF
+
+
+curl -X POST \
+    https://cloudbuild.googleapis.com/v1/projects/${PROJECT}/triggers \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" \
+    --data-binary @branch-build-trigger.json
+```
+
+```
+
+cat <<EOF > master-build-trigger.json
+{
+  "triggerTemplate": {
+    "projectId": "${PROJECT}",
+    "repoName": "default",
+    "branchName": "master"
+  },
+  "description": "branch",
+  "substitutions": {
+    "_CLOUDSDK_COMPUTE_ZONE": "${ZONE}",
+    "_CLOUDSDK_CONTAINER_CLUSTER": "${CLUSTER}"
+  },
+  "filename": "builder/cloudbuild-canary.yaml"
+}
+EOF
+
+
+curl -X POST \
+    https://cloudbuild.googleapis.com/v1/projects/${PROJECT}/triggers \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" \
+    --data-binary @master-build-trigger.json
+```
+
 # Cloud Builder
 
 
