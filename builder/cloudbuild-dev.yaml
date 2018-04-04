@@ -49,7 +49,7 @@ steps:
           
           
 
-          sed -i 's|gcr.io/cloud-solutions-images/gceme:.*|gcr.io/$PROJECT/gcme:${BRANCH_NAME}-${SHORT_SHA}|' ./kubernetes/deployments/dev/*.yaml
+          sed -i 's|gcr.io/cloud-solutions-images/gceme:.*|gcr.io/$PROJECT_ID/gcme:${BRANCH_NAME}-${SHORT_SHA}|' ./kubernetes/deployments/dev/*.yaml
           
           kubectl get ns ${BRANCH_NAME} || kubectl create ns ${BRANCH_NAME}
           kubectl apply --namespace ${BRANCH_NAME} --recursive -f kubernetes/deployments/dev
