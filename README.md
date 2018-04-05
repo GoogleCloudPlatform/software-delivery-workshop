@@ -1,6 +1,6 @@
 # GKE Deployments with Cloud Builder
 
-The included scripts are intended to demonstrate how to use Google Cloud Container Builder as a continuous integration system deploying code to GKE. 
+The included scripts are intended to demonstrate how to use Google Cloud Container Builder as a continuous integration system deploying code to GKE. This is not an official Google product. 
 
 The example here follows a pattern where:
 - developers use cloud servers during local development
@@ -44,6 +44,13 @@ This lab shows you how to setup a continuous delivery pipeline for GKE using Goo
 
     gcloud config set compute/zone $ZONE
 
+```
+## Enable Services
+```
+gcloud services enable container.googleapis.com --async
+gcloud services enable containerregistry.googleapis.com --async
+gcloud services enable cloudbuild.googleapis.com --async
+gcloud services enable sourcerepo.googleapis.com --async
 ```
 ## Create Cluster
 
@@ -120,7 +127,7 @@ Ensure you have credentials available
 gcloud auth application-default login
 
 ```
-Branch
+**Branches**
 ```
 
 cat <<EOF > branch-build-trigger.json
@@ -147,7 +154,7 @@ curl -X POST \
     --data-binary @branch-build-trigger.json
 ```
 
-Master
+**Master**
 ```
 
 cat <<EOF > master-build-trigger.json
@@ -174,7 +181,7 @@ curl -X POST \
     --data-binary @master-build-trigger.json
 ```
 
-Tag
+**Tag**
 ```
 
 cat <<EOF > tag-build-trigger.json
@@ -201,21 +208,17 @@ curl -X POST \
     --data-binary @tag-build-trigger.json
 ```
 
-# Cloud Builder
-
-
-## Build in the cloud
 
 
 
 
-### Build & Deploy of local content
+### Build & Deploy of local content (optional)
 
 The following submits a build to cloud builder and deploys the results to a user's namespace.
 
 ```
 gcloud container builds submit \
-    --config cloudbuild-local.yaml \
+    --config builder/cloudbuild-local.yaml \
     --substitutions=_VERSION=someversion,_USER=$(whoami),_CLOUDSDK_COMPUTE_ZONE=${ZONE},_CLOUDSDK_CONTAINER_CLUSTER=${CLUSTER} .
 
 
