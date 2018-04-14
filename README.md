@@ -208,6 +208,7 @@ curl -X POST \
     --data-binary @tag-build-trigger.json
 ```
 
+Review triggers are setup on the [Build Triggers Page](https://console.cloud.google.com/gcr/triggers) 
 
 
 
@@ -223,4 +224,148 @@ gcloud container builds submit \
 
 
 ```
+
+
+## Deploy Branches to Namespaces
+
+Development branches are a set of environments your developers use to test their code changes before submitting them for integration into the live site. These environments are scaled-down versions of your application, but need to be deployed using the same mechanisms as the live environment.
+
+### Create a development branch
+
+To create a development environment from a feature branch, you can push the branch to the Git server and let Cloud Builder deploy your environment. 
+
+Create a development branch and push it to the Git server.
+
+```
+git checkout -b new-feature
+```
+
+
+### Modify the site
+
+In order to demonstrate changing the application, you will be change the gceme cards from blue to orange.
+
+**Step 1**
+Open html.go and replace the two instances of blue with orange.
+
+**Step 2**
+Open main.go and change the version number from 1.0.0 to 2.0.0. The version is defined in this line:
+
+const version string = "2.0.0"
+
+### Kick off deployment
+
+**Step 1**
+
+Commit and push your changes. This will kick off a build of your development environment.
+
+```
+git add html.go main.go
+
+git commit -m "Version 2.0.0"
+
+git push gcp new-feature
+```
+
+**Step 2**
+
+After the change is pushed to the Git repository, navigate to the [Build History Page](https://console.cloud.google.com/gcr/builds) user interface where you can see that your build started for the new-feature branch 
+
+Click into the build to review the details of the job
+
+**Step 3**
+
+Once that completes, verify that your application is accessible. You should see it respond with 2.0.0, which is the version that is now running.
+
+Retrieve the external IP for the production services.
+
+It can take several minutes before you see the load balancer external IP address.
+
+```
+kubectl get service gceme-frontend -n new-feature
+```
+
+Once an External-IP is provided store it for later use
+
+```
+export FRONTEND_SERVICE_IP=$(kubectl get -o jsonpath="{.status.loadBalancer.ingress[0].ip}" --namespace=new-feature services gceme-frontend)
+
+curl http://$FRONTEND_SERVICE_IP/version
+
+```
+
+
+>Congratulations! You've setup a pipeline and deployed code to GKE with cloud builder. 
+
+
+The rest of this example follows the same pattern but demonstrates the triggers for Master and Tags. 
+
+## Deploy Master to canary
+
+Now that you have verified that your app is running your latest code in the development environment, deploy that code to the canary environment.
+
+**Step 1**
+Create a canary branch and push it to the Git server.
+
+```
+git checkout master
+
+git merge new-feature
+
+git push gcp master
+```
+
+Again after you’ve pushed to the Git repository, navigate to the [Build History Page](https://console.cloud.google.com/gcr/builds) user interface where you can see that your build started for the master branch 
+
+Click into the build to review the details of the job
+
+**Step 2**
+
+Once complete, you can check the service URL to ensure that some of the traffic is being served by your new version. You should see about 1 in 5 requests returning version 2.0.0.
+
+```
+export FRONTEND_SERVICE_IP=$(kubectl get -o jsonpath="{.status.loadBalancer.ingress[0].ip}" --namespace=production services gceme-frontend)
+
+while true; do curl http://$FRONTEND_SERVICE_IP/version; sleep 1;  done
+```
+
+You can stop this command by pressing `Ctrl-C`.
+
+>Congratulations!
+>
+>You have deployed a canary release. Next you will deploy the new version to production by creating a tag.
+
+
+## Deploy Tags to production
+
+Now that your canary release was successful and you haven't heard any customer complaints, you can deploy to the rest of your production fleet. 
+
+**Step 1**
+Merge the canary branch and push it to the Git server.
+
+```
+git tag v2.0.0
+
+git push gcp v2.0.0
+```
+
+Review the job on the the [Build History Page](https://console.cloud.google.com/gcr/builds) user interface where you can see that your build started for the v2.0.0 tag 
+
+Click into the build to review the details of the job
+
+**Step 2**
+Once complete, you can check the service URL to ensure that all of the traffic is being served by your new version, 2.0.0. You can also navigate to the site using your browser to see your orange cards.
+
+```
+export FRONTEND_SERVICE_IP=$(kubectl get -o jsonpath="{.status.loadBalancer.ingress[0].ip}" --namespace=production services gceme-frontend)
+
+while true; do curl http://$FRONTEND_SERVICE_IP/version; sleep 1;  done
+```
+
+You can stop this command by pressing `Ctrl-C`.
+
+
+>Congratulations!
+>
+>You have successfully deployed your application to production!
 
