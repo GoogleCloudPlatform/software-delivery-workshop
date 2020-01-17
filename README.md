@@ -1,6 +1,6 @@
-# GKE Deployments with Cloud Builder
+# GKE Deployments with Cloud Build
 
-The included scripts are intended to demonstrate how to use Google Cloud Container Builder as a continuous integration system deploying code to GKE. This is not an official Google product. 
+The included scripts are intended to demonstrate how to use Google Cloud Build as a continuous integration system deploying code to GKE. This is not an official Google product. 
 
 The example here follows a pattern where:
 - developers use cloud servers during local development
@@ -17,13 +17,13 @@ There are 5 scripts included as part of the demo:
 - cloudbuild.yaml - an all in one script that can be used for branches, master and tags with one configuration
 
 
-This lab shows you how to setup a continuous delivery pipeline for GKE using Google Cloud Container Builder. We’ll run through the following steps
+This lab shows you how to setup a continuous delivery pipeline for GKE using Google Cloud Build. We’ll run through the following steps
 
 - Create a GKE Cluster
 - Review the application structure
 - Manually deploy the application
 - Create a repository for our source
-- Setup automated triggers in Cloud Builder
+- Setup automated triggers in Cloud Build
 - Automatically deploy Branches to custom namespaces
 - Automatically deploy Master as a canary
 - Automatically deploy Tags to production
@@ -72,9 +72,9 @@ gcloud services enable sourcerepo.googleapis.com --async
     --zone=${ZONE}
 ```
 
-## Give Cloud Builder Rights
+## Give Cloud Build Rights
 
-For `kubectl` commands against GKE youll need to give Container Builder Service Account container.developer role access on your clusters [details](https://github.com/GoogleCloudPlatform/cloud-builders/tree/master/kubectl).
+For `kubectl` commands against GKE youll need to give Cloud Build Service Account container.developer role access on your clusters [details](https://github.com/GoogleCloudPlatform/cloud-builders/tree/master/kubectl).
 
 ```
 PROJECT_NUMBER="$(gcloud projects describe \
@@ -215,7 +215,7 @@ Review triggers are setup on the [Build Triggers Page](https://console.cloud.goo
 
 ### Build & Deploy of local content (optional)
 
-The following submits a build to cloud builder and deploys the results to a user's namespace.
+The following submits a build to Cloud Build and deploys the results to a user's namespace.
 
 ```
 gcloud container builds submit \
@@ -232,7 +232,7 @@ Development branches are a set of environments your developers use to test their
 
 ### Create a development branch
 
-To create a development environment from a feature branch, you can push the branch to the Git server and let Cloud Builder deploy your environment. 
+To create a development environment from a feature branch, you can push the branch to the Git server and let Cloud Build deploy your environment. 
 
 Create a development branch and push it to the Git server.
 
@@ -269,7 +269,7 @@ git push gcp new-feature
 
 **Step 2**
 
-After the change is pushed to the Git repository, navigate to the [Build History Page](https://console.cloud.google.com/gcr/builds) user interface where you can see that your build started for the new-feature branch 
+After the change is pushed to the Git repository, navigate to the [Build History Page](https://console.cloud.google.com/cloud-build/builds) user interface where you can see that your build started for the new-feature branch 
 
 Click into the build to review the details of the job
 
@@ -295,7 +295,7 @@ curl http://$FRONTEND_SERVICE_IP/version
 ```
 
 
->Congratulations! You've setup a pipeline and deployed code to GKE with cloud builder. 
+>Congratulations! You've setup a pipeline and deployed code to GKE with Cloud Build. 
 
 
 The rest of this example follows the same pattern but demonstrates the triggers for Master and Tags. 
