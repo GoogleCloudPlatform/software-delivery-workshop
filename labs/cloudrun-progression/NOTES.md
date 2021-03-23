@@ -46,6 +46,11 @@ git clone git@github.com:cgrant/sdw-private.git -b cloudrun-progression cloudrun
 
 cd cloudrun-progression/labs/cloudrun-progression
 rm -rf ../../.git 
+
+sed "s/PROJECT/${PROJECT_ID}/g" branch-trigger.json-tmpl > branch-trigger.json
+sed "s/PROJECT/${PROJECT_ID}/g" master-trigger.json-tmpl > master-trigger.json
+sed "s/PROJECT/${PROJECT_ID}/g" tag-trigger.json-tmpl > tag-trigger.json
+
 git init && git add . && git commit -m "initial commit"
 
 git config credential.helper gcloud.sh
@@ -56,14 +61,14 @@ git push gcp master
 
 
 gcloud builds submit --tag gcr.io/$PROJECT_ID/hello-cloudrun
-gcloud run deploy hello-cloudrun \
+gcloud beta run deploy hello-cloudrun \
     --image gcr.io/$PROJECT_ID/hello-cloudrun \
     --platform managed \
     --region us-central1 \
     --allow-unauthenticated \
     --tag=prod
 
-
+open https://pantheon.corp.google.com/run/detail/us-central1/hello-cloudrun/revisions
 ```
 
 
@@ -73,10 +78,14 @@ Trigger on any branch name
 ```shell
 gcloud beta builds triggers create cloud-source-repositories --trigger-config branch-trigger.json
 
+open https://pantheon.corp.google.com/cloud-build/triggers
+
 git checkout -b foo
 touch FOOBAR.md
 git add . && git commit -m "updated" && git push gcp foo
 
+open https://pantheon.corp.google.com/cloud-build/builds
+open https://pantheon.corp.google.com/run/detail/us-central1/hello-cloudrun/revisions
 
 #Get the URL of the service
 BRANCH_URL=$(gcloud run services describe hello-cloudrun --format=json | jq --raw-output ".status.traffic[] | select (.tag==\"foo\")|.url")
@@ -89,18 +98,28 @@ curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" $BRANCH_URL
 ```
 gcloud beta builds triggers create cloud-source-repositories --trigger-config master-trigger.json
 
+open https://pantheon.corp.google.com/cloud-build/triggers
+
 git checkout master
 git merge foo
 git add . && git commit -m "merge foo"
 git push gcp master
 
+open https://pantheon.corp.google.com/cloud-build/builds
+open https://pantheon.corp.google.com/run/detail/us-central1/hello-cloudrun/revisions
 ```
 
 
 ## Release to Production
 ```
 gcloud beta builds triggers create cloud-source-repositories --trigger-config tag-trigger.json
+
+open https://pantheon.corp.google.com/cloud-build/triggers
+
 git tag 1.0 && git push gcp 1.0
+
+open https://pantheon.corp.google.com/cloud-build/builds
+open https://pantheon.corp.google.com/run/detail/us-central1/hello-cloudrun/revisions
 ```
 
 

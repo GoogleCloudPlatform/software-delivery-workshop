@@ -1,6 +1,6 @@
 {
   "triggerTemplate": {
-    "projectId": "crg-gcp",
+    "projectId": "PROJECT",
     "repoName": "cloudrun-progression",
     "branchName": "master"
   },
