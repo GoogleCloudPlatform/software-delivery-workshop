@@ -1,0 +1,10 @@
+{
+  "triggerTemplate": {
+    "projectId": "crg-gcp",
+    "repoName": "cloudrun-progression",
+    "branchName": "[^(?!.*master)].*"
+  },
+  "description": "branch",
+
+  "filename": "branch-cloudbuild.yaml"
+}

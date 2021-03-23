@@ -1,100 +1,115 @@
+=================
+TODO:
+- [x] Commands for branches instead of master
+- [x] Write deploy yaml & trigger json for branch
+    - [X] utilize beta run command below 
+    - [X] need to pass in branch name variable for tag
+    - [ ] output Branch URL in build output
+- [X]User: Switch to branch, make a change, push to branch
+- User: Wait for build to complete
+- [X]Update user command below to get branch name dynamically 
+- Implement the same for canary and prod
+- [x] Add TAG prod to iniitial depoyment
+- Updated triggers to use dynamic project ID...currently hard coded
+=================
 
 # Tutorial Flow
 
-- Create your CloudRun Service
-- Enable Dynamic Developer Deployments
-- Automate Canary Testing
-- Release to Production
+- [X]Preparing your environment
+- [X]Creating your CloudRun Service
+- [X]Enabling Dynamic Developer Deployments
+- [ ]Automating Canary Testing
+- [ ]Releasing to Production
 
 Working Doc: https://docs.google.com/document/d/1jSqtX7uLpAQD7ZqVdaU62v1Q_yUo3boJvYEalaaNf_8/edit
 
 CloudRun Proxy: https://github.com/sethvargo/cloud-run-proxy
 
-# Notes
 
-## Setup
+## Preparing your environment
+
+```shell
 git config --global user.email "[EMAIL_ADDRESS]"
 git config --global user.name "[USERNAME]"
 
-PROJECT_ID=$(gcloud config get-value project)
-
-## Create your CloudRun Service
-What are we going to deploy?
+export PROJECT_ID=$(gcloud config get-value project)
 
 
 
-Do Some git stuff
-```shell
+cd ../
+mkdir workdir && cd workdir
 
 # Clone & remove Git
-#git clone https://github.com/GoogleCloudPlatform/cicd-workshop 
-git clone git@github.com:cgrant/cicd-workshop.git -b cloudrun-progression 
-cd cicd-workshop && 
-cd labs/cloudrun-progression
+#git clone https://github.com/GoogleCloudPlatform/software-delivery-workshop 
+#git clone git@github.com:cgrant/software-delivery-workshop.git -b cloudrun-progression
+git clone git@github.com:cgrant/sdw-private.git -b cloudrun-progression cloudrun-progression 
+
+cd cloudrun-progression/labs/cloudrun-progression
+rm -rf ../../.git 
 git init && git add . && git commit -m "initial commit"
-#cd cloud-run-helloworld-python/
 
 git config credential.helper gcloud.sh
 gcloud source repos create cloudrun-progression
 git remote add gcp https://source.developers.google.com/p/$PROJECT_ID/r/cloudrun-progression
 git branch -m master
 git push gcp master
-```
 
-Build & Deploy
-
-```shell
 
 gcloud builds submit --tag gcr.io/$PROJECT_ID/hello-cloudrun
 gcloud run deploy hello-cloudrun \
     --image gcr.io/$PROJECT_ID/hello-cloudrun \
     --platform managed \
     --region us-central1 \
-    --allow-unauthenticated 
+    --allow-unauthenticated \
+    --tag=prod
 
 
 ```
 
 
 ## Enable Dynamic Developer Deployments
+Trigger on any branch name
 
-- Trigger on branch name
+```shell
+gcloud beta builds triggers create cloud-source-repositories --trigger-config branch-trigger.json
 
-gcloud beta builds triggers create cloud-source-repositories --trigger-config trigger.json
-
-
-
-=================
-TODO:
-- Update above command for branches instead of master
-- Write deploy yaml & trigger json for branch
-    - utilize beta run command below 
-    - need to pass in branch name variable for tag
-    - output Branch URL in build output
-- User: Switch to branch, make a change, push to branch
-- User: Wait for build to complete
-- Update user command below to get branch name dynamically 
-- Implement the same for canary and prod
+git checkout -b foo
+touch FOOBAR.md
+git add . && git commit -m "updated" && git push gcp foo
 
 
-- Deploy to label
-```
-gcloud beta run deploy helloworld \
-    --image gcr.io/$PROJECT_ID/helloworld \
-    --region us-central1 \
-    --no-traffic \
-    --tag=branchanme
-```
-
-Get the URL of the service
-BRANCH_URL=$(gcloud run services describe helloworld --format=json | jq --raw-output ".status.traffic[] | select (.tag==\"branchanme\")|.url")
+#Get the URL of the service
+BRANCH_URL=$(gcloud run services describe hello-cloudrun --format=json | jq --raw-output ".status.traffic[] | select (.tag==\"foo\")|.url")
 echo $BRANCH_URL
 curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" $BRANCH_URL
 
-
+```
 
 ## Automate Canary Testing
+```
+gcloud beta builds triggers create cloud-source-repositories --trigger-config master-trigger.json
+
+git checkout master
+git merge foo
+git add . && git commit -m "merge foo"
+git push gcp master
+
+```
+
+
 ## Release to Production
+```
+gcloud beta builds triggers create cloud-source-repositories --trigger-config tag-trigger.json
+git tag 1.0 && git push gcp 1.0
+```
+
+
+
+
+
+
+
+
 
 
 
@@ -141,19 +156,14 @@ tag with git hash
 
 gcloud beta run deploy hello --image us-docker.pkg.dev/cloudrun/container/hello --platform managed --tag=canary
 
-- Get current "canary" revision
-```shell
-    CANARY=$(gcloud run services describe hello --format=json | jq --raw-output ".spec.traffic[] | select (.tag==\"canary\")|.revisionName")
-```
-
-- Get current "prod" revision
-```shell
-    PROD=$(gcloud run services describe hello --format=json | jq --raw-output ".spec.traffic[] | select (.tag==\"prod\")|.revisionName")
-```
-- update traffic
-```shell
-    gcloud run services update-traffic hello --to-revisions=$PROD=90,$CANARY=10
-```
+gcloud run deploy ${_SERVICE_NAME} \
+            --platform managed \
+            --region ${_REGION} \
+            --allow-unauthenticated \
+            --image gcr.io/${PROJECT_ID}/${_SERVICE_NAME} \
+            --tag=canary,sha$SHORT_SHA \
+            --no-traffic
+            --update-tags=[$SHORT_SHA=$$CANARY]
 
 - Update Tags
 ```shell

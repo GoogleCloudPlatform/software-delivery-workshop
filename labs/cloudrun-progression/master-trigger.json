@@ -2,9 +2,9 @@
   "triggerTemplate": {
     "projectId": "crg-gcp",
     "repoName": "cloudrun-progression",
-    "branchName": ".*"
+    "branchName": "master"
   },
-  "description": "AnyBranch",
+  "description": "master",
 
-  "filename": "cloudbuild.yaml"
+  "filename": "master-cloudbuild.yaml"
 }
