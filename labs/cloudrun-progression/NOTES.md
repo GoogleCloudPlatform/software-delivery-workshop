@@ -5,12 +5,12 @@ TODO:
     - [X] utilize beta run command below 
     - [X] need to pass in branch name variable for tag
     - [ ] output Branch URL in build output
-- [X]User: Switch to branch, make a change, push to branch
+- [X] User: Switch to branch, make a change, push to branch
 - User: Wait for build to complete
-- [X]Update user command below to get branch name dynamically 
-- Implement the same for canary and prod
+- [X] Update user command below to get branch name dynamically 
+- [x] Implement the same for canary and prod
 - [x] Add TAG prod to iniitial depoyment
-- Updated triggers to use dynamic project ID...currently hard coded
+- [x] Updated triggers to use dynamic project ID...currently hard coded
 =================
 
 # Tutorial Flow
@@ -18,8 +18,8 @@ TODO:
 - [X]Preparing your environment
 - [X]Creating your CloudRun Service
 - [X]Enabling Dynamic Developer Deployments
-- [ ]Automating Canary Testing
-- [ ]Releasing to Production
+- [X]Automating Canary Testing
+- [X]Releasing to Production
 
 Working Doc: https://docs.google.com/document/d/1jSqtX7uLpAQD7ZqVdaU62v1Q_yUo3boJvYEalaaNf_8/edit
 
