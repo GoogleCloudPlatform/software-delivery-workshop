@@ -29,15 +29,24 @@ CloudRun Proxy: https://github.com/sethvargo/cloud-run-proxy
 ## Preparing your environment
 
 ```shell
-git config --global user.email "[EMAIL_ADDRESS]"
-git config --global user.name "[USERNAME]"
 
-export PROJECT_ID=$(gcloud config get-value project)
-
-
+gcloud services enable \
+    cloudresourcemanager.googleapis.com \
+    container.googleapis.com \
+    sourcerepo.googleapis.com \
+    cloudbuild.googleapis.com \
+    containerregistry.googleapis.com \
+    run.googleapis.com 
 
 cd ../
 mkdir workdir && cd workdir
+
+
+export PROJECT_ID=$(gcloud config get-value project)
+git config --global user.email "[EMAIL_ADDRESS]"
+git config --global user.name "[USERNAME]"
+
+
 
 # Clone & remove Git
 #git clone https://github.com/GoogleCloudPlatform/software-delivery-workshop 
@@ -51,12 +60,12 @@ sed "s/PROJECT/${PROJECT_ID}/g" branch-trigger.json-tmpl > branch-trigger.json
 sed "s/PROJECT/${PROJECT_ID}/g" master-trigger.json-tmpl > master-trigger.json
 sed "s/PROJECT/${PROJECT_ID}/g" tag-trigger.json-tmpl > tag-trigger.json
 
-git init && git add . && git commit -m "initial commit"
 
 git config credential.helper gcloud.sh
 gcloud source repos create cloudrun-progression
 git remote add gcp https://source.developers.google.com/p/$PROJECT_ID/r/cloudrun-progression
 git branch -m master
+git init && git add . && git commit -m "initial commit"
 git push gcp master
 
 
@@ -69,6 +78,13 @@ gcloud beta run deploy hello-cloudrun \
     --tag=prod
 
 open https://pantheon.corp.google.com/run/detail/us-central1/hello-cloudrun/revisions
+
+
+
+PROD_URL=$(gcloud run services describe hello-cloudrun --format=json | jq --raw-output ".status.traffic[] | select (.tag==\"prod\")|.url")
+echo $PROD_URL
+curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" $PROD_URL
+
 ```
 
 
@@ -215,3 +231,11 @@ timeout -s TERM ${SECONDS} bash -c \
 
 
 # Canary to live
+
+
+
+
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:$PROJECT_NUMBER@cloudbuild.gserviceaccount.com" \
+    --role="roles/run.admin"
