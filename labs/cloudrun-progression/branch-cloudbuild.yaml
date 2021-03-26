@@ -39,7 +39,6 @@ steps:
           gcloud run deploy ${_SERVICE_NAME} \
             --platform managed \
             --region ${_REGION} \
-            --allow-unauthenticated \
             --image gcr.io/${PROJECT_ID}/${_SERVICE_NAME} \
             --tag=${BRANCH_NAME} \
             --no-traffic
