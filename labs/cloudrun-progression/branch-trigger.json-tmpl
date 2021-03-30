@@ -4,7 +4,8 @@
     "repoName": "cloudrun-progression",
     "branchName": "[^(?!.*master)].*"
   },
-  "description": "branch",
+  "name": "branch",
+  "description": "Trigger dev build/deploy for any branch other than master",
 
   "filename": "branch-cloudbuild.yaml"
 }
