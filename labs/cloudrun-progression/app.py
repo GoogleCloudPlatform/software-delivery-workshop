@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# Copyright 2020 Google LLC
+# Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,8 +21,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
-    target = os.environ.get('TARGET', 'World')
-    return 'Hello {}!\n'.format(target)
+    return 'Hello World v1.0'
 
 if __name__ == "__main__":
     app.run(debug=True,host='0.0.0.0',port=int(os.environ.get('PORT', 8080)))
