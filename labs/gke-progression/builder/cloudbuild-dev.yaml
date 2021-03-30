@@ -22,7 +22,7 @@ steps:
     args: 
       - '-c'
       - |
-          docker build -t gcr.io/$PROJECT_ID/gcme:${BRANCH_NAME}-${SHORT_SHA} .
+          docker build -t gcr.io/$PROJECT_ID/gceme:${BRANCH_NAME}-${SHORT_SHA} .
 
 
 
@@ -36,7 +36,7 @@ steps:
     args: 
       - '-c'
       - |
-          docker push gcr.io/$PROJECT_ID/gcme:${BRANCH_NAME}-${SHORT_SHA}
+          docker push gcr.io/$PROJECT_ID/gceme:${BRANCH_NAME}-${SHORT_SHA}
 
 
 
@@ -63,7 +63,7 @@ steps:
           
           
 
-          sed -i 's|gcr.io/cloud-solutions-images/gceme:.*|gcr.io/$PROJECT_ID/gcme:${BRANCH_NAME}-${SHORT_SHA}|' ./kubernetes/deployments/dev/*.yaml
+          sed -i 's|gcr.io/cloud-solutions-images/gceme:.*|gcr.io/$PROJECT_ID/gceme:${BRANCH_NAME}-${SHORT_SHA}|' ./kubernetes/deployments/dev/*.yaml
           
           kubectl get ns ${BRANCH_NAME} || kubectl create ns ${BRANCH_NAME}
           kubectl apply --namespace ${BRANCH_NAME} --recursive -f kubernetes/deployments/dev
