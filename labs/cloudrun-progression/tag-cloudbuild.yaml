@@ -35,6 +35,7 @@ steps:
           echo gcloud run services update-traffic  ${_SERVICE_NAME} --to-revisions=$${PROD}=100  --platform managed  --region ${_REGION}
           
           gcloud beta run services update-traffic  ${_SERVICE_NAME} --update-tags=prod=$${CANARY}  --platform managed  --region ${_REGION}
-          gcloud run services update-traffic  ${_SERVICE_NAME} --to-revisions=$${PROD}=100  --platform managed  --region ${_REGION}
+          export NEW_PROD=$$(gcloud run services describe hello-cloudrun --platform managed  --region ${_REGION} --format=json | jq --raw-output ".spec.traffic[] | select (.tag==\"prod\")|.revisionName")
+          gcloud run services update-traffic  ${_SERVICE_NAME} --to-revisions=$${NEW_PROD}=100  --platform managed  --region ${_REGION}
       
 
