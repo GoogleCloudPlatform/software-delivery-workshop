@@ -1,7 +1,7 @@
 # Software Delivery Workshop
 
 
-This repository contains resources and materials targeted toward Software Delivery on Google Cloud. In addition to separate stand alone guides, an opinionated yet modular platform is provided to demonstrate software delivery practices. In contains scripts to standup a base platform infrastructure as well as other resources designed to facilitate hands on workshop and standard demo use cases. The platform provisioning resources are structured to be modular in nature supporting various runtime and tooling configurations. Ideally users can utilize their own choice of tooling for: Provisioning, Source Code Management, Templating, Build Engine, Image Storage and Deploy tooling. 
+This repository contains resources and materials targeted toward Software Delivery on Google Cloud. In addition to separate stand alone guides, an opinionated yet modular platform is provided to demonstrate software delivery practices. It contains scripts to standup a base platform infrastructure as well as other resources designed to facilitate hands on workshop and standard demo use cases. The platform provisioning resources are structured to be modular in nature supporting various runtime and tooling configurations. Ideally users can utilize their own choice of tooling for: Provisioning, Source Code Management, Templating, Build Engine, Image Storage and Deploy tooling. 
 
 
 ## Usage
