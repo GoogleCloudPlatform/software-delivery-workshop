@@ -7,3 +7,4 @@ terraform.tfvars
 backend.tf
 .terraform/
 .talismanrc
+.DS_Store
