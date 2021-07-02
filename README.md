@@ -9,7 +9,7 @@ This repository contains resources and materials targeted toward Software Delive
 This set of resources contains materials to provision the platform, deliver short demonstrations and facilitate hands on workshops. 
 
 ### Workshop
-The Software Delivery Workshop contains materials for a self led exploration or accompanying instructor led sessions. To get started with either click the button below to open the resources in Google Cloud Shell. 
+The Software Delivery Workshop contains materials for a self led exploration or accompanying instructor led sessions. To get started click the button below to open the resources in Google Cloud Shell. 
 
 [![Software Delivery Workshop](http://www.gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/GoogleCloudPlatform/software-delivery-workshop.git&cloudshell_workspace=.&cloudshell_tutorial=delivery-platform/docs/workshop/1.2-provision.md)
 
