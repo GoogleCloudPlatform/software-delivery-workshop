@@ -90,9 +90,12 @@ create () {
 
     # Initial deploy
     cd $WORK_DIR/app-templates/${APP_LANG}
+    git pull
     echo "v1" > version.txt
     git add . && git commit -m "v1" 
     git push origin main
+    sleep 10
+    git pull
     git tag v1
     git push origin v1
 

@@ -13,23 +13,6 @@
 # limitations under the License.
 
 steps:
-  # TEMP STEP
-  # - id: gitref
-  #   name: bash
-  #   args:
-  #     - '-c'
-  #     - |
-  #       echo "${_REF}"
-  #       IFS='/' read -a array <<< "${_REF}"
-  #       echo ${array[1]}
-
-  #       if [ ${array[1]} == "tags" ] ; then
-  #         echo "FOUND TAG"
-  #       else
-  #         echo "FOUND BRANCH"
-  #       fi
-  #       echo ${array[1]} ${array[2]}
-
   # Create the hydrated directories  
   - id: create-dirs
     name: bash
@@ -74,7 +57,6 @@ steps:
   - id: skaffold-build
     name: gcr.io/k8s-skaffold/skaffold
     entrypoint: bash
-    # changed from GIT_URL to APP_REPO
     args:
       - '-c'
       - |
@@ -85,7 +67,6 @@ steps:
   - id: skaffold-render
     name: gcr.io/k8s-skaffold/skaffold
     entrypoint: bash
-    # changed from GIT_URL to APP_REPO
     args:
       - '-c'
       - |
