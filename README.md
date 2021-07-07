@@ -14,6 +14,25 @@ The Software Delivery Workshop contains materials for a self led exploration or 
 [![Software Delivery Workshop](http://www.gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/GoogleCloudPlatform/software-delivery-workshop.git&cloudshell_workspace=.&cloudshell_tutorial=delivery-platform/docs/workshop/1.2-provision.md)
 
 
+If at any time during the workshop you somehow exit out of the lab instructions, you can relaunch the lab using the related command below:
+
+```
+teachme "${BASE_DIR}/docs/workshop/1.2-provision.md"
+teachme "${BASE_DIR}/docs/workshop/1.3-kustomize.md"
+teachme "${BASE_DIR}/docs/workshop/2.1-app-onboarding.md"
+teachme "${BASE_DIR}/docs/workshop/2.2-develop.md"
+teachme "${BASE_DIR}/docs/workshop/3.2-release-progression.md"
+
+```
+
+If at anytime you lose your terminal session, ensure you are in the `software-delivery-workshop/delivery-platform` directory then run the following commands to reset your environment variables. 
+
+
+```shell
+gcloud config set project <YOUR_PROJECT>
+source ./env.sh
+```
+
 ### Demo
 For a mostly automated experience follow the instructions in the `docs\demo` folder. You will run an automated script to fully provision the platform before your demonstration. A separate guide describes the steps to perform during the demonstration and concludes with instructions how to reset the demo or tear down the infrastructure. 
 
