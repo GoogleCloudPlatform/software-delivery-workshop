@@ -20,7 +20,6 @@ locals {
 
 provider "google" {
   project = var.project_id
-  version = "~> 3.44.0"
 }
 
 data "google_compute_network" "delivery-platform" {
