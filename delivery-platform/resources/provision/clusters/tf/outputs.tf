@@ -26,13 +26,21 @@ output "staging__cluster-service-account" {
 
 output "dev_name" { value = module.delivery-platform-dev.name }
 output "dev_location" { value = module.delivery-platform-dev.location }
-output "dev_endpoint" { value = module.delivery-platform-dev.endpoint }
+output "dev_endpoint" {
+  value     = module.delivery-platform-dev.endpoint
+  sensitive = true
+}
 
 output "stage_name" { value = module.delivery-platform-staging.name }
 output "stage_location" { value = module.delivery-platform-staging.location }
-output "stage_endpoint" { value = module.delivery-platform-staging.endpoint }
+output "stage_endpoint" {
+  value     = module.delivery-platform-staging.endpoint
+  sensitive = true
+}
 
 output "prod_name" { value = module.delivery-platform-prod.name }
 output "prod_location" { value = module.delivery-platform-prod.location }
-output "prod_endpoint" { value = module.delivery-platform-prod.endpoint }
-
+output "prod_endpoint" {
+  value     = module.delivery-platform-prod.endpoint
+  sensitive = true
+}

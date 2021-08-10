@@ -19,7 +19,7 @@ RUN apt-get update && \
                        apt-transport-https ca-certificates \
                        dnsutils curl gettext
 
-ENV TERRAFORM_VERSION=0.13.5
+ENV TERRAFORM_VERSION=1.0.3
 ENV HELM_VERSION=2.14.3
 ENV KUBECTL_VERSION=1.16.1
 ENV GO_VERSION=1.14.2
