@@ -12,30 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: skaffold/v1beta14
-kind: Config
-build:
-  artifacts:
-  - image: app # Match name in deployment yaml
-    context: ./
-deploy:
-  kustomize:
-    path: k8s/dev
-
-profiles:
-- name: dev
-  activation:
-    - command: dev
-  deploy:
-    kustomize:
-      path: k8s/dev
-
-- name: staging
-  deploy:
-    kustomize:
-      path: k8s/stage
-
-- name: prod
-  deploy:
-    kustomize:
-      path: k8s/prod
+apiVersion: deploy.cloud.google.com/v1beta1
+kind: Target
+metadata:
+  name: prod
+  annotations: {}
+  labels: {}
+description: prod
+requireApproval: false
+gkeCluster:
+  project: $PROJECT_ID
+  cluster: prod
+  location: us-central1

@@ -55,7 +55,9 @@ create () {
 
     find . -name kustomization.yaml -exec sed -i "s/namePrefix:.*/namePrefix: ${APP_NAME}-/g" {} \;
     find . -name kustomization.yaml -exec sed -i "s/  app:.*/  app: ${APP_NAME}/g" {} \;
-    
+    find . -name pipeline.yaml -exec sed -i "s/  name:.*/  name: ${APP_NAME}/g" {} \;
+    find . -name pipeline.yaml -exec sed -i "s/  app:.*/  app: ${APP_NAME}/g" {} \;
+    find . -name cicd_clouddeploy.yaml -exec sed -i "s/--delivery-pipeline sample-app/--delivery-pipeline ${APP_NAME}/g" {} \;
     
     ## Insert image name of new app
     find . -name deployment.yaml -exec sed -i "s/image: app/image: ${APP_NAME}/g" {} \;
