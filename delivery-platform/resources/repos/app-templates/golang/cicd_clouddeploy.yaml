@@ -62,5 +62,6 @@ steps:
                             --description "$(git log -1  --pretty='%s')" \
                             --build-artifacts /workspace/artifacts.json \
                             --annotations="commit_ui=${_APP_REPO}/+/$COMMIT_SHA"
+        ls -lrt /workspace
 
 
