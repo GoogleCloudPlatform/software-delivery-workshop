@@ -261,9 +261,9 @@ create_cloudbuild_trigger_for_clouddeploy () {
 
 
     ## Create Secret
-    #SECRET_NAME=${APP_NAME}-webhook-trigger-secret
+    SECRET_NAME=${APP_NAME}-webhook-trigger-secret
     #SECRET_VALUE=$(sed "s/[^a-zA-Z0-9]//g" <<< $(openssl rand -base64 15))
-    #SECRET_PATH=projects/${PROJECT_NUMBER}/secrets/${SECRET_NAME}/versions/1
+    SECRET_PATH=projects/${PROJECT_NUMBER}/secrets/${SECRET_NAME}/versions/1
     #printf ${SECRET_VALUE} | gcloud secrets create ${SECRET_NAME} --data-file=-
     #gcloud secrets add-iam-policy-binding ${SECRET_NAME} \
     #    --member=serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-cloudbuild.iam.gserviceaccount.com \
