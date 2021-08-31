@@ -70,6 +70,9 @@ create () {
     git remote add origin $GIT_BASE_URL/${APP_NAME}
     git add . && git commit -m "initial commit" 
     git push origin main
+    # Auth fails intermittetly on the very first client call for some reason
+    #   Adding a retry to ensure the source is pushed. 
+    git push origin main
     
 
     # Configure Build
@@ -216,9 +219,7 @@ create_cloudbuild_trigger () {
     ## Setup Trigger & Webhook
     gcloud alpha builds triggers create webhook \
         --name=${TRIGGER_NAME} \
-        --repo=${REPO_LOCATION} \
         --substitutions='_APP_NAME='${APP_NAME}',_APP_REPO=$(body.repository.git_url),_CONFIG_REPO='${GIT_BASE_URL}'/'${CLUSTER_CONFIG_REPO}',_DEFAULT_IMAGE_REPO='${IMAGE_REPO}',_KUSTOMIZE_REPO='${GIT_BASE_URL}'/'${SHARED_KUSTOMIZE_REPO}',_REF=$(body.ref)' \
-        --branch='*' \
         --inline-config=$BUILD_YAML_PATH \
         --secret=${SECRET_PATH}
 
