@@ -52,7 +52,7 @@ steps:
     - -c
     - |
         gcloud config set deploy/region ${_REGION}
-        #sed -i s/PROJECT_ID/$PROJECT_ID/g deploy/*
+        sed -i s/PROJECT_ID/$PROJECT_ID/g deploy/*
         gcloud alpha deploy apply --file deploy/pipeline.yaml
         gcloud alpha deploy apply --file deploy/staging.yaml
         gcloud alpha deploy apply --file deploy/prod.yaml

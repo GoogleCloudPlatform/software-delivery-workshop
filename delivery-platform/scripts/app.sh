@@ -76,7 +76,7 @@ create () {
 
     # Configure Build
     create_cloudbuild_trigger ${APP_NAME}
-
+    create_cloudbuild_trigger_for_clouddeploy ${APP_NAME}
 
     # Configure Deployment 
 
@@ -235,5 +235,68 @@ create_cloudbuild_trigger () {
 }
 
 
+create_cloudbuild_trigger_for_clouddeploy () {
+    APP_NAME=${1:-"my-app"}
+    ## Project variables
+    if [[ ${PROJECT_ID} == "" ]]; then
+        echo "PROJECT_ID env variable is not set"
+        exit -1
+    fi
+    if [[ ${PROJECT_NUMBER} == "" ]]; then
+        echo "PROJECT_NUMBER env variable is not set"
+        exit -1
+    fi
+
+    ## API Key
+    if [[ ${APP_LANG} == "" ]]; then
+        echo "APP_LANG env variable is not set"
+        exit -1
+    fi
+
+    ## API Key
+    if [[ ${API_KEY_VALUE} == "" ]]; then
+        echo "API_KEY_VALUE env variable is not set"
+        exit -1
+    fi
+
+
+    ## Create Secret
+    #SECRET_NAME=${APP_NAME}-webhook-trigger-secret
+    #SECRET_VALUE=$(sed "s/[^a-zA-Z0-9]//g" <<< $(openssl rand -base64 15))
+    #SECRET_PATH=projects/${PROJECT_NUMBER}/secrets/${SECRET_NAME}/versions/1
+    #printf ${SECRET_VALUE} | gcloud secrets create ${SECRET_NAME} --data-file=-
+    #gcloud secrets add-iam-policy-binding ${SECRET_NAME} \
+    #    --member=serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-cloudbuild.iam.gserviceaccount.com \
+    #    --role='roles/secretmanager.secretAccessor'
+
+    gcloud projects add-iam-policy-binding --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" --role roles/clouddeploy.admin ${PROJECT_ID}
+    gcloud projects add-iam-policy-binding --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" --role roles/container.developer ${PROJECT_ID}
+    gcloud projects add-iam-policy-binding --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" --role roles/iam.serviceAccountUser ${PROJECT_ID}
+    gcloud projects add-iam-policy-binding --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" --role roles/clouddeploy.jobRunner ${PROJECT_ID}
+    ## Create CloudBuild Webhook Endpoint
+    REPO_LOCATION=https://github.com/${GIT_USERNAME}/${APP_NAME}
+
+    TRIGGER_NAME=${APP_NAME}-clouddeploy-webhook-trigger
+    BUILD_YAML_PATH=$WORK_DIR/app-templates/${APP_LANG}/cicd_clouddeploy.yaml
+
+    ## Setup Trigger & Webhook
+    gcloud alpha builds triggers create webhook \
+        --name=${TRIGGER_NAME} \
+        --repo=${REPO_LOCATION} \
+        --substitutions='_APP_NAME='${APP_NAME}',_APP_REPO=$(body.repository.git_url),_CONFIG_REPO='${GIT_BASE_URL}'/'${CLUSTER_CONFIG_REPO}',_DEFAULT_IMAGE_REPO='${IMAGE_REPO}',_KUSTOMIZE_REPO='${GIT_BASE_URL}'/'${SHARED_KUSTOMIZE_REPO}',_REF=$(body.ref)' \
+        --branch='*' \
+        --inline-config=$BUILD_YAML_PATH \
+        --secret=${SECRET_PATH}
+
+
+
+    ## Retrieve the URL
+    WEBHOOK_URL="https://cloudbuild.googleapis.com/v1/projects/${PROJECT_ID}/triggers/${TRIGGER_NAME}:webhook?key=${API_KEY_VALUE}&secret=${SECRET_VALUE}"
+
+    ## Create Github Webhook
+    $BASE_DIR/scripts/git/${GIT_CMD} create_webhook ${APP_NAME} $WEBHOOK_URL
+
+}
+
 # execute function matching first arg and pass rest of args through
-$1 $2 $3 $4 $5 
+$1 $2 $3 $4 $5 $6
