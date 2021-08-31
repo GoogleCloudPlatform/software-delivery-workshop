@@ -271,6 +271,11 @@ create_cloudbuild_trigger_for_clouddeploy () {
     gcloud projects add-iam-policy-binding --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" --role roles/container.developer ${PROJECT_ID}
     gcloud projects add-iam-policy-binding --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" --role roles/iam.serviceAccountUser ${PROJECT_ID}
     gcloud projects add-iam-policy-binding --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" --role roles/clouddeploy.jobRunner ${PROJECT_ID}
+
+    ##Enabling APIS for cloud deploy
+    gcloud services enable clouddeploy.googleapis.com  cloudresourcemanager.googleapis.com
+
+
     ## Create CloudBuild Webhook Endpoint
     REPO_LOCATION=https://github.com/${GIT_USERNAME}/${APP_NAME}
 
