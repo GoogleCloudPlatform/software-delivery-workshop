@@ -20,6 +20,6 @@ metadata:
   labels: {}
 description: staging
 gkeCluster:
-  project: $PROJECT_ID
+  project: PROJECT_ID
   cluster: staging
   location: us-west2
