@@ -51,7 +51,7 @@ steps:
     - -xe
     - -c
     - |
-        #gcloud config set deploy/region us-central1
+        gcloud config set deploy/region us-central1
         cd app-repo
         sed -i s/PROJECT_ID/$PROJECT_ID/g deploy/*
         gcloud alpha deploy apply --file deploy/pipeline.yaml
