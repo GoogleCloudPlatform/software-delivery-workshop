@@ -208,7 +208,7 @@ create_cloudbuild_trigger () {
         --role='roles/secretmanager.secretAccessor'
 
     ## Create CloudBuild Webhook Endpoint
-    REPO_LOCATION=https://github.com/${GIT_USERNAME}/${GIT_REPO_NAME}
+    REPO_LOCATION=https://github.com/${GIT_USERNAME}/${APP_NAME}
 
     TRIGGER_NAME=${APP_NAME}-webhook-trigger
     BUILD_YAML_PATH=$WORK_DIR/app-templates/${APP_LANG}/cloudbuild.yaml

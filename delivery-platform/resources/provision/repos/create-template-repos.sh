@@ -23,11 +23,17 @@ cp -R $BASE_DIR/resources/repos/app-templates $WORK_DIR
 cd $WORK_DIR/app-templates
 git init && git symbolic-ref HEAD refs/heads/main && git add . && git commit -m "initial commit"
 $BASE_DIR/scripts/git/${GIT_CMD} create $APP_TEMPLATES_REPO  
+sleep 5
 git remote add origin $GIT_BASE_URL/$APP_TEMPLATES_REPO
+echo "check --- Push 1"
+git push origin main
+echo "check --- Push 2"
 git push origin main
 cd $BASE_DIR
 rm -rf $WORK_DIR/app-templates
 
+echo "check --- did it work?"
+sleep 120
 # Create shared kustomize repo
 cp -R $BASE_DIR/resources/repos/shared-kustomize $WORK_DIR
 cd $WORK_DIR/shared-kustomize
