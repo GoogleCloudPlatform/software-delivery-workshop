@@ -288,7 +288,13 @@ create_cloudbuild_trigger_for_clouddeploy () {
         --inline-config=$BUILD_YAML_PATH \
         --secret=${SECRET_PATH}
 
-
+    echo "gcloud alpha builds triggers create webhook \
+        --name=${TRIGGER_NAME} \
+        #--repo=${REPO_LOCATION} \
+        --substitutions='_APP_NAME='${APP_NAME}',_APP_REPO=$(body.repository.git_url),_CONFIG_REPO='${GIT_BASE_URL}'/'${CLUSTER_CONFIG_REPO}',_DEFAULT_IMAGE_REPO='${IMAGE_REPO}',_KUSTOMIZE_REPO='${GIT_BASE_URL}'/'${SHARED_KUSTOMIZE_REPO}',_REF=$(body.ref)' \
+        #--branch='*' \
+        --inline-config=$BUILD_YAML_PATH \
+        --secret=${SECRET_PATH}"
 
     ## Retrieve the URL
     WEBHOOK_URL="https://cloudbuild.googleapis.com/v1/projects/${PROJECT_ID}/triggers/${TRIGGER_NAME}:webhook?key=${API_KEY_VALUE}&secret=${SECRET_VALUE}"
