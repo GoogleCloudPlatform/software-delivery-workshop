@@ -40,9 +40,8 @@ steps:
     args:
     - '-c'
     - |
-      git clone ${_KUSTOMIZE_REPO} kustomize-base
       cd app-repo
-      find . -name kustomization.yaml -exec sed -i "s?- ../../../kustomize-base?- ../../kustomize-base" {} \;
+      find . -name kustomization.yaml -exec sed -i "s?- ../../../kustomize-base?- ../../kustomize-base?g" {} \;
       cp -r ../kustomize-base .
 
   #  Build and push the image
