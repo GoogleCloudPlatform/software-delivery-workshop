@@ -40,7 +40,7 @@ steps:
     args:
       - '-c'
       - |
-        #cd app-repo
+        cd app-repo
         skaffold build --file-output=/workspace/artifacts.json \
                                --default-repo ${_DEFAULT_IMAGE_REPO} \
                                --push=true
