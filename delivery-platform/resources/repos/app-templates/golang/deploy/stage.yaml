@@ -22,4 +22,4 @@ description: stage
 gkeCluster:
   project: PROJECT_ID
   cluster: stage
-  location: us-west2
+  location: us-west2-a
