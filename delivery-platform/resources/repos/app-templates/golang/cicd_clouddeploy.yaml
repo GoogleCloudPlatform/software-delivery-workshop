@@ -34,6 +34,17 @@ steps:
         git clone ${_KUSTOMIZE_REPO} kustomize-base
         sleep 5
 
+  - id: hack-for-clouddeploy
+    name: gcr.io/cloud-builders/git
+    entrypoint: bash
+    args:
+    - '-c'
+    - |
+      git clone ${_KUSTOMIZE_REPO} kustomize-base
+      cd app-repo
+      find . -name kustomization.yaml -exec sed -i "s?- ../../../kustomize-base?- ../../kustomize-base" {} \;
+      cp -r ../kustomize-base .
+
   #  Build and push the image
   - id: skaffold-build
     name: gcr.io/k8s-skaffold/skaffold
