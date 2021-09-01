@@ -32,6 +32,7 @@ steps:
       - '-c'
       - |
         git clone ${_KUSTOMIZE_REPO} kustomize-base
+        sleep 5
 
   #  Build and push the image
   - id: skaffold-build
@@ -41,6 +42,7 @@ steps:
       - '-c'
       - |
         cd app-repo
+        ls -lrt /workspace/kustomize-base/golang
         skaffold build --file-output=/workspace/artifacts.json \
                                --default-repo ${_DEFAULT_IMAGE_REPO} \
                                --push=true
@@ -62,6 +64,6 @@ steps:
                             --description "$(git log -1  --pretty='%s')" \
                             --build-artifacts /workspace/artifacts.json \
                             --annotations="commit_ui=${_APP_REPO}/+/$COMMIT_SHA"
-        ls -lrt /workspace/kustomize-base/golang
+
 
 
