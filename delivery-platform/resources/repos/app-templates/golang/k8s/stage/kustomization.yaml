@@ -18,4 +18,5 @@ patches:
 - deployment.yaml
 commonLabels:
   env: stg
+  role: backend
 namePrefix: golang-template-
