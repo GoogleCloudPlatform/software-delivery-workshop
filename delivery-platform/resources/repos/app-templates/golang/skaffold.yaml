@@ -30,7 +30,7 @@ profiles:
     kustomize:
       path: k8s/dev
 
-- name: staging
+- name: stage
   deploy:
     kustomize:
       path: k8s/stage
