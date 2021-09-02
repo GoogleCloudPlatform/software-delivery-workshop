@@ -57,7 +57,7 @@ create () {
     find . -name kustomization.yaml -exec sed -i "s/  app:.*/  app: ${APP_NAME}/g" {} \;
     find . -name pipeline.yaml -exec sed -i "s/  name:.*/  name: ${APP_NAME}/g" {} \;
     find . -name pipeline.yaml -exec sed -i "s/  app:.*/  app: ${APP_NAME}/g" {} \;
-    find . -name cicd_clouddeploy.yaml -exec sed -i "s/--delivery-pipeline sample-app/--delivery-pipeline ${APP_NAME}/g" {} \;
+    find . -name cloudbuild-cd.yaml -exec sed -i "s/--delivery-pipeline sample-app/--delivery-pipeline ${APP_NAME}/g" {} \;
     
     ## Insert image name of new app
     find . -name deployment.yaml -exec sed -i "s/image: app/image: ${APP_NAME}/g" {} \;
@@ -76,8 +76,10 @@ create () {
 
     # Configure Build based on CD system.
     if [ ${CONTINUOUS_DELIVERY_SYSTEM}="ACM" ]; then
+        echo "calling regular webhook"
         create_cloudbuild_trigger ${APP_NAME}
     elif [ ${CONTINUOUS_DELIVERY_SYSTEM}="Clouddeploy" ]; then
+        echo "calling CD webhook"
         create_cloudbuild_trigger_for_clouddeploy ${APP_NAME}
     fi
 
@@ -301,7 +303,7 @@ create_cloudbuild_trigger_for_clouddeploy () {
     REPO_LOCATION=https://github.com/${GIT_USERNAME}/${APP_NAME}
 
     TRIGGER_NAME=${APP_NAME}-clouddeploy-webhook-trigger
-    BUILD_YAML_PATH=$WORK_DIR/app-templates/${APP_LANG}/cicd_clouddeploy.yaml
+    BUILD_YAML_PATH=$WORK_DIR/app-templates/${APP_LANG}/cloudbuild-cd.yaml
 
     ## Setup Trigger & Webhook
     gcloud alpha builds triggers create webhook \
