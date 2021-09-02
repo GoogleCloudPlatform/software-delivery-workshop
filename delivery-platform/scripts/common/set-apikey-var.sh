@@ -8,6 +8,7 @@ if [[ ${API_KEY_VALUE} == "" ]]; then
     echo ""
     printf "Paste your API Key here and press enter: " && read keyval
     export API_KEY_VALUE=${keyval}
+    echo ""
 fi
 
 write_state

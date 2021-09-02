@@ -31,5 +31,6 @@ function write_state() {
     echo "export GIT_BASE_URL=${GIT_BASE_URL}" >> $WORK_DIR/state.env
     echo "export GIT_CMD=${GIT_CMD}" >> $WORK_DIR/state.env
     echo "export API_KEY_VALUE=${API_KEY_VALUE}" >> $WORK_DIR/state.env
+    echo "export CONTINUOUS_DELIVERY_SYSTEM=${CONTINUOUS_DELIVERY_SYSTEM}" >> $WORK_DIR/state.env
     
 }
