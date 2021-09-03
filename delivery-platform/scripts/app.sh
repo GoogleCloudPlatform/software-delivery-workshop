@@ -144,6 +144,9 @@ delete () {
         rm -rf $WORK_DIR/acm-repo
    elif [[ ${CONTINUOUS_DELIVERY_SYSTEM} == "Clouddeploy" ]]; then
         #Delete the deployments for dev, staging and prod. The deployments with CD are created with default namespace
+        kubectx dev && kubectl get deploy --namespace default --selector="app=${APP_NAME}" --output jsonpath='{.items[0].metadata.name}' || true
+        kubectx stage && kubectl get deploy --namespace default --selector="app=${APP_NAME}" --output jsonpath='{.items[0].metadata.name}' || true
+        kubectx prod && kubectl get deploy --namespace default --selector="app=${APP_NAME}" --output jsonpath='{.items[0].metadata.name}' || true
         kubectx dev && kubectl delete deploy $(kubectl get deploy --namespace default --selector="app=${APP_NAME}" --output jsonpath='{.items[0].metadata.name}') || true
         kubectx stage && kubectl delete deploy $(kubectl get deploy --namespace default --selector="app=${APP_NAME}"  --output jsonpath='{.items[0].metadata.name}') || true
         kubectx prod && kubectl delete deploy $(kubectl get deploy --namespace default --selector="app=${APP_NAME}"  --output jsonpath='{.items[0].metadata.name}') || true
