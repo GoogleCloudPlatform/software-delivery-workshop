@@ -141,9 +141,9 @@ delete () {
         rm -rf $WORK_DIR/acm-repo
    elif [[ ${CONTINUOUS_DELIVERY_SYSTEM} == "Clouddeploy" ]]; then
         #Delete the deployments for dev, staging and prod. The deployments with CD are created with default namespace
-        kubectx dev && kubectl delete deploy $(kubectl get deploy --namespace default --selector="app=clouddeploy-demo" --output jsonpath='{.items[0].metadata.name}') || true
-        kubectx stage && kubectl delete deploy $(kubectl get deploy --namespace default --selector="app=clouddeploy-demo" --output jsonpath='{.items[0].metadata.name}') || true
-        kubectx prod && kubectl delete deploy $(kubectl get deploy --namespace default --selector="app=clouddeploy-demo" --output jsonpath='{.items[0].metadata.name}') || true
+        kubectx dev && kubectl delete deploy $(kubectl get deploy --namespace default --selector=${APP_NAME} --output jsonpath='{.items[0].metadata.name}') || true
+        kubectx stage && kubectl delete deploy $(kubectl get deploy --namespace default --selector=${APP_NAME}  --output jsonpath='{.items[0].metadata.name}') || true
+        kubectx prod && kubectl delete deploy $(kubectl get deploy --namespace default --selector=${APP_NAME}  --output jsonpath='{.items[0].metadata.name}') || true
 
         #Also delete CD pipelines. Pipelines are in us-central1
         gcloud alpha deploy delivery-pipelines delete ${APP_NAME} --region="us-central1" --force -q || true
