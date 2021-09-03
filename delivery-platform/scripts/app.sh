@@ -75,10 +75,10 @@ create () {
     
 
     # Configure Build based on CD system.
-    if [[ ${CONTINUOUS_DELIVERY_SYSTEM}=="ACM" ]]; then
+    if [[ ${CONTINUOUS_DELIVERY_SYSTEM} == "ACM" ]]; then
         echo "calling regular webhook"
         create_cloudbuild_trigger ${APP_NAME}
-    elif [[ ${CONTINUOUS_DELIVERY_SYSTEM}=="Clouddeploy" ]]; then
+    elif [[ ${CONTINUOUS_DELIVERY_SYSTEM} == "Clouddeploy" ]]; then
         echo "calling CD webhook"
         create_cloudbuild_trigger_for_clouddeploy ${APP_NAME}
     fi
@@ -86,7 +86,7 @@ create () {
     # Configure Deployment 
 
     ## Add App Namespace if using config manager
-    if [[ ${CONTINUOUS_DELIVERY_SYSTEM}=="ACM" ]]; then
+    if [[ ${CONTINUOUS_DELIVERY_SYSTEM} == "ACM" ]]; then
         for dir in k8s/* ; do
             #if [ -d "$dir" ]; then
                 echo ---adding ${dir##*/}
@@ -122,7 +122,7 @@ delete () {
    # Remove any orphaned hydrated directories from other processes 
    rm -rf $WORK_DIR/$APP_NAME-hydrated
    
-   if [[ ${CONTINUOUS_DELIVERY_SYSTEM}=="ACM" ]]; then
+   if [[ ${CONTINUOUS_DELIVERY_SYSTEM} == "ACM" ]]; then
         cd $WORK_DIR/
         git clone -b main $GIT_BASE_URL/$CLUSTER_CONFIG_REPO acm-repo
         cd acm-repo
@@ -139,7 +139,7 @@ delete () {
         git add . && git commit -m "Removing app: ${APP_NAME}" && git push origin main
         cd $BASE_DIR
         rm -rf $WORK_DIR/acm-repo
-   elif [[ ${CONTINUOUS_DELIVERY_SYSTEM}=="Clouddeploy" ]]; then
+   elif [[ ${CONTINUOUS_DELIVERY_SYSTEM} == "Clouddeploy" ]]; then
         #Delete the deployments for dev, staging and prod. The deployments with CD are created with default namespace
         kubectx dev && kubectl delete deploy $(kubectl get deploy --namespace default --selector="app=clouddeploy-demo" --output jsonpath='{.items[0].metadata.name}') || true
         kubectx stage && kubectl delete deploy $(kubectl get deploy --namespace default --selector="app=clouddeploy-demo" --output jsonpath='{.items[0].metadata.name}') || true
@@ -150,19 +150,19 @@ delete () {
    fi
 
     # Delete secret
-   if [[ ${CONTINUOUS_DELIVERY_SYSTEM}=="ACM" ]]; then
+   if [[ ${CONTINUOUS_DELIVERY_SYSTEM} == "ACM" ]]; then
         SECRET_NAME=${APP_NAME}-webhook-trigger-secret
         gcloud secrets delete ${SECRET_NAME} -q
-   elif [[ ${CONTINUOUS_DELIVERY_SYSTEM}=="Clouddeploy" ]]; then
+   elif [[ ${CONTINUOUS_DELIVERY_SYSTEM} == "Clouddeploy" ]]; then
         SECRET_NAME=${APP_NAME}-webhook-trigger-cd-secret
         gcloud secrets delete ${SECRET_NAME} -q
    fi
 
     # Delete trigger
-    if [[ ${CONTINUOUS_DELIVERY_SYSTEM}=="ACM" ]]; then
+    if [[ ${CONTINUOUS_DELIVERY_SYSTEM} == "ACM" ]]; then
         TRIGGER_NAME=${APP_NAME}-webhook-trigger
         gcloud alpha builds triggers delete ${TRIGGER_NAME} -q
-    elif [[ ${CONTINUOUS_DELIVERY_SYSTEM}=="Clouddeploy" ]]; then
+    elif [[ ${CONTINUOUS_DELIVERY_SYSTEM} == "Clouddeploy" ]]; then
         TRIGGER_NAME=${APP_NAME}-clouddeploy-webhook-trigger
         gcloud alpha builds triggers delete ${TRIGGER_NAME} -q
     fi
