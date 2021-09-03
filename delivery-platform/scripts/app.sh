@@ -147,6 +147,7 @@ delete () {
         kubectx dev && kubectl get deploy --namespace default --selector="app=${APP_NAME}" --output jsonpath='{.items[0].metadata.name}' || true
         kubectx stage && kubectl get deploy --namespace default --selector="app=${APP_NAME}" --output jsonpath='{.items[0].metadata.name}' || true
         kubectx prod && kubectl get deploy --namespace default --selector="app=${APP_NAME}" --output jsonpath='{.items[0].metadata.name}' || true
+        echo "##############HIGHLIGHTS##################"
         kubectx dev && kubectl delete deploy $(kubectl get deploy --namespace default --selector="app=${APP_NAME}" --output jsonpath='{.items[0].metadata.name}') || true
         kubectx stage && kubectl delete deploy $(kubectl get deploy --namespace default --selector="app=${APP_NAME}"  --output jsonpath='{.items[0].metadata.name}') || true
         kubectx prod && kubectl delete deploy $(kubectl get deploy --namespace default --selector="app=${APP_NAME}"  --output jsonpath='{.items[0].metadata.name}') || true
