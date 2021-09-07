@@ -34,6 +34,19 @@
         apikeys.googleapis.com \
         secretmanager.googleapis.com
 
+    #Enable CLoud Deploy APIs and grant the service account required roles. Since it is not GA yet, put enabling APIs behind an IF condition
+
+    if [ ${CONTINUOUS_DELIVERY_SYSTEM}="Clouddeploy" ]; then
+      gcloud services enable clouddeploy.googleapis.com  cloudresourcemanager.googleapis.com
+      # TODO trim the following down
+      gcloud projects add-iam-policy-binding --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" --role roles/clouddeploy.admin ${PROJECT_ID}
+      gcloud projects add-iam-policy-binding --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" --role roles/container.developer ${PROJECT_ID}
+      gcloud projects add-iam-policy-binding --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" --role roles/iam.serviceAccountUser ${PROJECT_ID}
+      gcloud projects add-iam-policy-binding --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" --role roles/clouddeploy.jobRunner ${PROJECT_ID}
+      gcloud projects add-iam-policy-binding --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" --role roles/container.admin ${PROJECT_ID}
+    fi
+
+
     ### Grant the Project Editor role to the Cloud Build service account in order to provision project resources
 
     gcloud projects add-iam-policy-binding $PROJECT_ID \

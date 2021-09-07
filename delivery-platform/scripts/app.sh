@@ -55,7 +55,9 @@ create () {
 
     find . -name kustomization.yaml -exec sed -i "s/namePrefix:.*/namePrefix: ${APP_NAME}-/g" {} \;
     find . -name kustomization.yaml -exec sed -i "s/  app:.*/  app: ${APP_NAME}/g" {} \;
-    
+    find . -name pipeline.yaml -exec sed -i "s/  name:.*/  name: ${APP_NAME}/g" {} \;
+    find . -name pipeline.yaml -exec sed -i "s/  app:.*/  app: ${APP_NAME}/g" {} \;
+    find . -name cloudbuild-cd.yaml -exec sed -i "s/--delivery-pipeline sample-app/--delivery-pipeline ${APP_NAME}/g" {} \;
     
     ## Insert image name of new app
     find . -name deployment.yaml -exec sed -i "s/image: app/image: ${APP_NAME}/g" {} \;
@@ -75,14 +77,19 @@ create () {
     git push origin main
     
 
-    # Configure Build
-    create_cloudbuild_trigger ${APP_NAME}
-
+    # Configure Build based on CD system.
+    if [[ ${CONTINUOUS_DELIVERY_SYSTEM} == "ACM" ]]; then
+        echo "calling regular webhook"
+        create_cloudbuild_trigger ${APP_NAME}
+    elif [[ ${CONTINUOUS_DELIVERY_SYSTEM} == "Clouddeploy" ]]; then
+        echo "calling CD webhook"
+        create_cloudbuild_trigger_for_clouddeploy ${APP_NAME}
+    fi
 
     # Configure Deployment 
 
     ## Add App Namespace if using config manager
-    if [[ ${ACM_IN_USE} ]]; then
+    if [[ ${CONTINUOUS_DELIVERY_SYSTEM} == "ACM" ]]; then
         for dir in k8s/* ; do
             #if [ -d "$dir" ]; then
                 echo ---adding ${dir##*/}
@@ -118,7 +125,7 @@ delete () {
    # Remove any orphaned hydrated directories from other processes 
    rm -rf $WORK_DIR/$APP_NAME-hydrated
    
-   if [[ ${ACM_IN_USE} ]]; then
+   if [[ ${CONTINUOUS_DELIVERY_SYSTEM} == "ACM" ]]; then
         cd $WORK_DIR/
         git clone -b main $GIT_BASE_URL/$CLUSTER_CONFIG_REPO acm-repo
         cd acm-repo
@@ -135,15 +142,33 @@ delete () {
         git add . && git commit -m "Removing app: ${APP_NAME}" && git push origin main
         cd $BASE_DIR
         rm -rf $WORK_DIR/acm-repo
-    fi
+   elif [[ ${CONTINUOUS_DELIVERY_SYSTEM} == "Clouddeploy" ]]; then
+        #Delete the deployments for dev, staging and prod. The deployments with CD are created with default namespace
+        kubectx dev && kubectl delete deploy $(kubectl get deploy --namespace default --selector="app=${APP_NAME}" --output jsonpath='{.items[0].metadata.name}') || true
+        kubectx stage && kubectl delete deploy $(kubectl get deploy --namespace default --selector="app=${APP_NAME}"  --output jsonpath='{.items[0].metadata.name}') || true
+        kubectx prod && kubectl delete deploy $(kubectl get deploy --namespace default --selector="app=${APP_NAME}"  --output jsonpath='{.items[0].metadata.name}') || true
+
+        #Also delete CD pipelines. Pipelines are in us-central1
+        gcloud alpha deploy delivery-pipelines delete ${APP_NAME} --region="us-central1" --force -q || true
+   fi
 
     # Delete secret
-    SECRET_NAME=${APP_NAME}-webhook-trigger-secret
-    gcloud secrets delete ${SECRET_NAME} -q
+   if [[ ${CONTINUOUS_DELIVERY_SYSTEM} == "ACM" ]]; then
+        SECRET_NAME=${APP_NAME}-webhook-trigger-secret
+        gcloud secrets delete ${SECRET_NAME} -q
+   elif [[ ${CONTINUOUS_DELIVERY_SYSTEM} == "Clouddeploy" ]]; then
+        SECRET_NAME=${APP_NAME}-webhook-trigger-cd-secret
+        gcloud secrets delete ${SECRET_NAME} -q
+   fi
 
     # Delete trigger
-    TRIGGER_NAME=${APP_NAME}-webhook-trigger
-    gcloud alpha builds triggers delete ${TRIGGER_NAME} -q
+    if [[ ${CONTINUOUS_DELIVERY_SYSTEM} == "ACM" ]]; then
+        TRIGGER_NAME=${APP_NAME}-webhook-trigger
+        gcloud alpha builds triggers delete ${TRIGGER_NAME} -q
+    elif [[ ${CONTINUOUS_DELIVERY_SYSTEM} == "Clouddeploy" ]]; then
+        TRIGGER_NAME=${APP_NAME}-clouddeploy-webhook-trigger
+        gcloud alpha builds triggers delete ${TRIGGER_NAME} -q
+    fi
 
 }
 
@@ -234,5 +259,60 @@ create_cloudbuild_trigger () {
 }
 
 
+create_cloudbuild_trigger_for_clouddeploy () {
+    APP_NAME=${1:-"my-app"}
+    ## Project variables
+    if [[ ${PROJECT_ID} == "" ]]; then
+        echo "PROJECT_ID env variable is not set"
+        exit -1
+    fi
+    if [[ ${PROJECT_NUMBER} == "" ]]; then
+        echo "PROJECT_NUMBER env variable is not set"
+        exit -1
+    fi
+
+    ## API Key
+    if [[ ${APP_LANG} == "" ]]; then
+        echo "APP_LANG env variable is not set"
+        exit -1
+    fi
+
+    ## API Key
+    if [[ ${API_KEY_VALUE} == "" ]]; then
+        echo "API_KEY_VALUE env variable is not set"
+        exit -1
+    fi
+
+
+    ## Create Secret
+    SECRET_NAME=${APP_NAME}-webhook-trigger-cd-secret
+    SECRET_VALUE=$(sed "s/[^a-zA-Z0-9]//g" <<< $(openssl rand -base64 15))
+    SECRET_PATH=projects/${PROJECT_NUMBER}/secrets/${SECRET_NAME}/versions/1
+    printf ${SECRET_VALUE} | gcloud secrets create ${SECRET_NAME} --data-file=-
+    gcloud secrets add-iam-policy-binding ${SECRET_NAME} \
+        --member=serviceAccount:service-${PROJECT_NUMBER}@gcp-sa-cloudbuild.iam.gserviceaccount.com \
+        --role='roles/secretmanager.secretAccessor'
+
+    ## Create CloudBuild Webhook Endpoint
+    REPO_LOCATION=https://github.com/${GIT_USERNAME}/${APP_NAME}
+
+    TRIGGER_NAME=${APP_NAME}-clouddeploy-webhook-trigger
+    BUILD_YAML_PATH=$WORK_DIR/app-templates/${APP_LANG}/cloudbuild-cd.yaml
+
+    ## Setup Trigger & Webhook
+    gcloud alpha builds triggers create webhook \
+        --name=${TRIGGER_NAME} \
+        --substitutions='_APP_NAME='${APP_NAME}',_APP_REPO=$(body.repository.git_url),_CONFIG_REPO='${GIT_BASE_URL}'/'${CLUSTER_CONFIG_REPO}',_DEFAULT_IMAGE_REPO='${IMAGE_REPO}',_KUSTOMIZE_REPO='${GIT_BASE_URL}'/'${SHARED_KUSTOMIZE_REPO}',_REF=$(body.ref)' \
+        --inline-config=$BUILD_YAML_PATH \
+        --secret=${SECRET_PATH}
+
+    ## Retrieve the URL
+    WEBHOOK_URL="https://cloudbuild.googleapis.com/v1/projects/${PROJECT_ID}/triggers/${TRIGGER_NAME}:webhook?key=${API_KEY_VALUE}&secret=${SECRET_VALUE}"
+
+    ## Create Github Webhook
+    $BASE_DIR/scripts/git/${GIT_CMD} create_webhook ${APP_NAME} $WEBHOOK_URL
+
+}
+
 # execute function matching first arg and pass rest of args through
-$1 $2 $3 $4 $5 
+$1 $2 $3 $4 $5 $6
