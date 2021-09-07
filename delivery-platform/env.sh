@@ -50,7 +50,6 @@ source $SCRIPTS/continuous-delivery/set-cd-env.sh
 
 
 # Platform Config
-#export ACM_IN_USE=True
 # TODO: PROVISION_TOOL=tf
 # TODO: CONFIG_TOOL=acm
 # TODO: BUILD_TOOL=cloudbuild
