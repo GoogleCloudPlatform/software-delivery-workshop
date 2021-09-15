@@ -20,7 +20,5 @@ metadata:
   labels: {}
 description: prod
 requireApproval: false
-gkeCluster:
-  project: PROJECT_ID
-  cluster: prod
-  location: us-central1-a
+gke:
+  cluster: projects/PROJECT_ID/locations/us-central1-a/clusters/prod

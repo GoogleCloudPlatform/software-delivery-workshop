@@ -19,7 +19,5 @@ metadata:
   annotations: {}
   labels: {}
 description: stage
-gkeCluster:
-  project: PROJECT_ID
-  cluster: stage
-  location: us-west2-a
+gke:
+  cluster: projects/PROJECT_ID/locations/us-west2-a/clusters/stage
