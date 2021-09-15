@@ -34,7 +34,7 @@ steps:
         git clone ${_KUSTOMIZE_REPO} kustomize-base
         sleep 5
 
-  - id: hack-for-clouddeploy
+  - id: setup-for-clouddeploy
     name: gcr.io/cloud-builders/git
     entrypoint: bash
     args:
@@ -52,7 +52,6 @@ steps:
       - '-c'
       - |
         cd app-repo
-        ls -lrt /workspace/kustomize-base/golang
         skaffold build --file-output=/workspace/artifacts.json \
                                --default-repo ${_DEFAULT_IMAGE_REPO} \
                                --push=true
