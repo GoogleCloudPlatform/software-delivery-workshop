@@ -65,12 +65,12 @@ steps:
     - |
         gcloud config set deploy/region us-central1
         cd app-repo
-        COMMIT_SHA=$(git rev-parse --short HEAD)
+        SHORT_SHA=$(git rev-parse --short HEAD)
         sed -i s/PROJECT_ID/$PROJECT_ID/g deploy/*
         gcloud beta deploy apply --file deploy/pipeline.yaml
         gcloud beta deploy apply --file deploy/stage.yaml
         gcloud beta deploy apply --file deploy/prod.yaml
-        gcloud beta deploy releases create $SHORT_SHA-$(date +%s) \
+        gcloud beta deploy releases create rel-${SHORT_SHA}-$(date +%s) \
                             --delivery-pipeline sample-app \
                             --description "$(git log -1  --pretty='%s')" \
                             --build-artifacts /workspace/artifacts.json \
