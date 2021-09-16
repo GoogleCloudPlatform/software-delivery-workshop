@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="654cc03f-be81-4fb8-8cc7-f3ba941569f4" name="Default Changelist" comment="Incorporating cloud deploy">
+      <change beforePath="$PROJECT_DIR$/delivery-platform/docs/workshop/3.2-release-progression.md" beforeDir="false" afterPath="$PROJECT_DIR$/delivery-platform/docs/workshop/3.2-release-progression.md" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="G3PluginsProjectSettings">
+    <appliedSettings>
+      <entry key="LinkifyInternalShortlinks" value="true" />
+      <entry key="RecognizedNullableAnnotations" value="true" />
+    </appliedSettings>
+  </component>
+  <component name="Git.Settings">
+    <option name="PREVIEW_PUSH_PROTECTED_ONLY" value="true" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1xVKb4eGQ1Mk6nYH6lLGY0elK9n" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="TF_FMT" value="false" />
+    <property name="TODO_SCOPE" value="All Places" />
+    <property name="last_opened_file_path" value="$USER_HOME$/gitlab/anthos-gcp-ref-arch" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/delivery-platform/scripts/continuous-delivery" />
+      <recent name="$PROJECT_DIR$/delivery-platform/resources/repos/app-templates/golang" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="654cc03f-be81-4fb8-8cc7-f3ba941569f4" name="Default Changelist" comment="" />
+      <created>1630434888336</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1630434888336</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Incorporating cloud deploy">
+      <created>1630438226858</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1630438226859</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Incorporating cloud deploy">
+      <created>1630441004204</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1630441004204</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Incorporating cloud deploy">
+      <created>1630442015268</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1630442015268</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Incorporating cloud deploy">
+      <created>1630442074848</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1630442074848</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Incorporating cloud deploy">
+      <created>1630443450267</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1630443450267</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Incorporating cloud deploy">
+      <created>1630443583860</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1630443583860</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Incorporating cloud deploy">
+      <created>1630443802894</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1630443802894</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Incorporating cloud deploy">
+      <created>1630444265666</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1630444265666</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Incorporating cloud deploy">
+      <created>1630445938771</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1630445938771</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Incorporating cloud deploy">
+      <created>1630446192497</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1630446192497</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Incorporating cloud deploy">
+      <created>1630446465150</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1630446465150</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Incorporating cloud deploy">
+      <created>1630449025496</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1630449025496</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Incorporating cloud deploy">
+      <created>1630450724915</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1630450724915</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Incorporating cloud deploy">
+      <created>1630502994089</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1630502994089</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Incorporating cloud deploy">
+      <created>1630504034156</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1630504034156</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Incorporating cloud deploy">
+      <created>1630504224368</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1630504224368</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Incorporating cloud deploy">
+      <created>1630504293321</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1630504293321</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Incorporating cloud deploy">
+      <created>1630508585221</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1630508585221</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Incorporating cloud deploy">
+      <created>1630509597942</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1630509597942</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Incorporating cloud deploy">
+      <created>1630510265995</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1630510265995</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Incorporating cloud deploy">
+      <created>1630510966510</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1630510966510</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Incorporating cloud deploy">
+      <created>1630511837382</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1630511837382</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Incorporating cloud deploy">
+      <created>1630512792144</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1630512792144</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Incorporating cloud deploy">
+      <created>1630514198993</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1630514198993</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Incorporating cloud deploy">
+      <created>1630518971591</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1630518971591</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Incorporating cloud deploy">
+      <created>1630522798156</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1630522798156</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Incorporating cloud deploy">
+      <created>1630524893256</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1630524893257</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Incorporating cloud deploy">
+      <created>1630617645343</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1630617645343</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Incorporating cloud deploy">
+      <created>1630619516270</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1630619516270</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Incorporating cloud deploy">
+      <created>1630619946892</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1630619946892</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Incorporating cloud deploy">
+      <created>1630620355972</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1630620355972</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Incorporating cloud deploy">
+      <created>1630628246115</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1630628246115</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Incorporating cloud deploy">
+      <created>1630679172192</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1630679172192</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Incorporating cloud deploy">
+      <created>1630680102223</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1630680102223</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Incorporating cloud deploy">
+      <created>1630680299238</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1630680299238</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Incorporating cloud deploy">
+      <created>1630680897670</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1630680897670</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Incorporating cloud deploy">
+      <created>1630681415409</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1630681415409</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Incorporating cloud deploy">
+      <created>1631030362840</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1631030362840</updated>
+    </task>
+    <task id="LOCAL-00039" summary="Incorporating cloud deploy">
+      <created>1631030567232</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1631030567232</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Incorporating cloud deploy">
+      <created>1631739721437</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1631739721437</updated>
+    </task>
+    <task id="LOCAL-00041" summary="Incorporating cloud deploy">
+      <created>1631741659264</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1631741659264</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Incorporating cloud deploy">
+      <created>1631741822398</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1631741822398</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Incorporating cloud deploy" />
+    <option name="LAST_COMMIT_MESSAGE" value="Incorporating cloud deploy" />
+  </component>
+</project>
