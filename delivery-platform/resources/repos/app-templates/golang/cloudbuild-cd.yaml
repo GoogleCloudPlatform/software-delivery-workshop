@@ -34,7 +34,7 @@ steps:
         git clone ${_KUSTOMIZE_REPO} kustomize-base
         sleep 5
 
-  - id: hack-for-clouddeploy
+  - id: setup-for-clouddeploy
     name: gcr.io/cloud-builders/git
     entrypoint: bash
     args:
@@ -52,7 +52,6 @@ steps:
       - '-c'
       - |
         cd app-repo
-        ls -lrt /workspace/kustomize-base/golang
         skaffold build --file-output=/workspace/artifacts.json \
                                --default-repo ${_DEFAULT_IMAGE_REPO} \
                                --push=true
@@ -65,11 +64,12 @@ steps:
     - |
         gcloud config set deploy/region us-central1
         cd app-repo
+        SHORT_SHA=$(git rev-parse --short HEAD)
         sed -i s/PROJECT_ID/$PROJECT_ID/g deploy/*
-        gcloud alpha deploy apply --file deploy/pipeline.yaml
-        gcloud alpha deploy apply --file deploy/stage.yaml
-        gcloud alpha deploy apply --file deploy/prod.yaml
-        gcloud alpha deploy releases create $SHORT_SHA-$(date +%s) \
+        gcloud beta deploy apply --file deploy/pipeline.yaml
+        gcloud beta deploy apply --file deploy/stage.yaml
+        gcloud beta deploy apply --file deploy/prod.yaml
+        gcloud beta deploy releases create rel-${SHORT_SHA}-$(date +%s) \
                             --delivery-pipeline sample-app \
                             --description "$(git log -1  --pretty='%s')" \
                             --build-artifacts /workspace/artifacts.json \
