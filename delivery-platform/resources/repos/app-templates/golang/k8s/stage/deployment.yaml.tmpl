@@ -12,18 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: deploy.cloud.google.com/v1beta1
-kind: DeliveryPipeline
+kind: Deployment
+apiVersion: apps/v1
 metadata:
-  name: sample-app
-  labels:
-    app: sample-app
-description: delivery pipeline
-serialPipeline:
-  stages:
-  - targetId: stage
-    profiles:
-    - stage
-  - targetId: prod
-    profiles:
-    - prod
+  name: app
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: app
+        image: ${APP_NAME}
+        resources:
+          requests:
+            cpu: 25m
+            memory: 64Mi
+          limits:
+            cpu: 100m
+            memory: 256Mi
+        env:
+        - name: ENVIRONMENT
+          value: stg

@@ -12,11 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-bases:
-- ../../../kustomize-base/golang
-patches:
-- deployment.yaml
-namePrefix: "golang-template-" # App name (dash)
-commonLabels:
-  app: golang-template # App name for selectors
-  role: backend
+apiVersion: skaffold/v1beta14
+kind: Config
+build:
+  artifacts:
+  - image: ${APP_NAME} # Match name in deployment yaml
+    context: ./
+deploy:
+  kustomize:
+    path: k8s/dev
+
+profiles:
+- name: dev
+  activation:
+    - command: dev
+  deploy:
+    kustomize:
+      path: k8s/dev
+
+- name: stage
+  deploy:
+    kustomize:
+      path: k8s/stage
+
+- name: prod
+  deploy:
+    kustomize:
+      path: k8s/prod
