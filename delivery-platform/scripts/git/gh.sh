@@ -23,10 +23,7 @@ if [[ ${GIT_USERNAME} == "" ]]; then
     echo "GIT_USERNAME variable not set. Please rerun the env script"
     exit -1
 fi
-if [[ ${API_KEY_VALUE} == "" ]]; then
-    echo "API_KEY_VALUE variable not set. Please rerun the env script"
-    exit -1
-fi
+
 if [[ $1 == "create_webhook" ]]; then
     if [[ $2 == "" || $3 == ""  ]]; then
         echo "Missing parameters"
