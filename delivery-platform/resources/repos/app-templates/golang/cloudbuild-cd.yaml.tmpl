@@ -70,7 +70,7 @@ steps:
         gcloud beta deploy apply --file deploy/stage.yaml
         gcloud beta deploy apply --file deploy/prod.yaml
         gcloud beta deploy releases create rel-${SHORT_SHA}-$(date +%s) \
-                            --delivery-pipeline sample-app \
+                            --delivery-pipeline ${APP_NAME} \
                             --description "$(git log -1  --pretty='%s')" \
                             --build-artifacts /workspace/artifacts.json \
                             --annotations="commit_ui=${_APP_REPO}/+/$COMMIT_SHA"

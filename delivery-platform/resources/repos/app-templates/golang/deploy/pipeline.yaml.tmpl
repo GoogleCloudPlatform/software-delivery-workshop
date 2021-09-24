@@ -12,11 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-bases:
-- ../../../kustomize-base/golang
-patches:
-- deployment.yaml
-commonLabels:
-  app: golang-template
-  role: backend
-namePrefix: golang-template-
+apiVersion: deploy.cloud.google.com/v1beta1
+kind: DeliveryPipeline
+metadata:
+  name: ${APP_NAME}
+  labels:
+    app: ${APP_NAME}
+description: delivery pipeline
+serialPipeline:
+  stages:
+  - targetId: stage
+    profiles:
+    - stage
+  - targetId: prod
+    profiles:
+    - prod
