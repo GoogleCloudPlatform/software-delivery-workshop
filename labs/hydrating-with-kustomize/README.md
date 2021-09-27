@@ -271,7 +271,7 @@ Many organizations have a team that helps support the app teams and manage the p
 
 In this example, you will create a `shared-kustomize` folder and resources which will be included by all applications and regardless of which environment they're deployed. 
 
-1. Creating the shared-kustomize folder
+1. Create the shared-kustomize folder
 
 ```
 mkdir shared-kustomize
