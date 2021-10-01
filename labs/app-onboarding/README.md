@@ -27,9 +27,7 @@ gcloud config set project {{project-id}}
 ```
 gcloud services enable \
   cloudbuild.googleapis.com \
-  clouddeploy.googleapis.com \
-  secretmanager.googleapis.com \
-  cloudresourcemanager.googleapis.com
+  secretmanager.googleapis.com 
   
 ```
 
@@ -249,12 +247,6 @@ export KUSTOMIZE_REPO=${GIT_BASE_URL}/mcd-shared_kustomize
 echo $IMAGE_REPO
 ```
 
-4. Allow CloudBuild to call CloudDeploy
-
-```
-      gcloud projects add-iam-policy-binding --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" --role roles/clouddeploy.admin ${PROJECT_ID}
-      gcloud projects add-iam-policy-binding --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" --role roles/clouddeploy.jobRunner ${PROJECT_ID}
-```
 
 5. Create CloudBuild Webhook Trigger using the variables created previously. The application repo location is pulled from the body of the request from GitHub. A value below references the path in the request body where it's located
 

@@ -158,7 +158,7 @@ create_cloudbuild_trigger () {
     REPO_LOCATION=https://github.com/${GIT_USERNAME}/${APP_NAME}
 
     TRIGGER_NAME=${APP_NAME}-clouddeploy-webhook-trigger
-    BUILD_YAML_PATH=$WORK_DIR/app-templates/${APP_LANG}/cloudbuild-cd.yaml
+    BUILD_YAML_PATH=$WORK_DIR/app-templates/${APP_LANG}/cloudbuild-build-only.yaml
 
     ## Setup Trigger & Webhook
     gcloud alpha builds triggers create webhook \
