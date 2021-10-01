@@ -22,13 +22,24 @@ https://ide.cloud.google.com
 gcloud config set project {{project-id}}
 ```
 
-3. In the terminal window clone the application source with the following command: 
+3. Enable APIs
+
+```
+gcloud services enable \
+  cloudbuild.googleapis.com \
+  clouddeploy.googleapis.com \
+  secretmanager.googleapis.com \
+  cloudresourcemanager.googleapis.com
+  
+```
+
+4. In the terminal window clone the application source with the following command: 
 
 ```
 git clone https://github.com/GoogleCloudPlatform/software-delivery-workshop.git 
 ```
 
-4. Change into the directory and set the IDE workspace to the repo root
+5. Change into the directory and set the IDE workspace to the repo root
 
 ```
 cd software-delivery-workshop && rm -rf .git
@@ -49,13 +60,11 @@ The steps in this tutorial call the GitHub API to create and configure repositor
 
 ```
 source ./onboard-env.sh
-echo Git Username: $GIT_USERNAME
-echo Git Base URL: $GIT_BASE_URL
 ```
 
 ### Create App Template Repository
 
-Application templates are provided along with this lab as well. In this step you create your own copy of these files in a repo called `mcd-app-templates` in your GitHub account. 
+Sample application templates are provided along with this lab as an example of how you might integrate your own base templates. In this step you create your own copy of these files in a repo called `mcd-app-templates` in your GitHub account. 
 
 1. Copy the template to the working directory
 
@@ -179,16 +188,15 @@ In this step you will configure GitHub to call Google Cloud Build and execute yo
 
 You will need 2 elements to configure secure access to your application pipeline. An API key and a secret unique to the pipeline. 
 
-#### API KEY
+#### API Key
 
-The API_KEY is used to identify the client that is calling into a given API. In this case the client will be GitHub. A best practice not covered here is to lock down the scope of the API_KEY to only the specific APIs that client will be accessing. For now create a standard API Key through the following commands. 
+The API key is used to identify the client that is calling into a given API. In this case the client will be GitHub. A best practice not covered here is to lock down the scope of the API key to only the specific APIs that client will be accessing. You created the key in a previous step.
 
-1. Click on [this link]( https://console.cloud.google.com/apis/credentials) then click  'Create Credentials' and then  'API Key' to generate a new key
-2. Copy the key and return to your terminal 
-3. Store the key in a local variable by executing the command below. Be sure to replace [PASTE YOUR KEY HERE] with the value provided in the API window
+1. You can review the key by clicking on [this link]( https://console.cloud.google.com/apis/credentials) 
+2. You can ensure the value is set by running the following command
 
 ```
-export API_KEY_VALUE=[PASTE YOUR KEY HERE]
+echo $API_KEY_VALUE
 ```
 
 #### Pipeline Secret
@@ -241,7 +249,14 @@ export KUSTOMIZE_REPO=${GIT_BASE_URL}/mcd-shared_kustomize
 echo $IMAGE_REPO
 ```
 
-4. Create CloudBuild Webhook Trigger using the variables created previously. The application repo location is pulled from the body of the request from GitHub. A value below references the path in the request body where it's located
+4. Allow CloudBuild to call CloudDeploy
+
+```
+      gcloud projects add-iam-policy-binding --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" --role roles/clouddeploy.admin ${PROJECT_ID}
+      gcloud projects add-iam-policy-binding --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" --role roles/clouddeploy.jobRunner ${PROJECT_ID}
+```
+
+5. Create CloudBuild Webhook Trigger using the variables created previously. The application repo location is pulled from the body of the request from GitHub. A value below references the path in the request body where it's located
 
 ```
     gcloud alpha builds triggers create webhook \
@@ -251,22 +266,26 @@ echo $IMAGE_REPO
         --secret=${SECRET_PATH}
 ```
 
-1. Review the newly created Cloud Build trigger in the Console by [visiting this link](https://console.cloud.google.com/cloud-build/triggers)
+6. Review the newly created Cloud Build trigger in the Console by [visiting this link](https://console.cloud.google.com/cloud-build/triggers)
 
-2. Define a variable for the endpoint URL, that will be used by GitHub in the next step
 
-    `WEBHOOK_URL="https://cloudbuild.googleapis.com/v1/projects/${PROJECT_ID}/triggers/${TRIGGER_NAME}:webhook?key=${API_KEY_VALUE}&secret=${SECRET_VALUE}"`
 
 ### Configure GitHub Webhook
 
-1. Configure the webhook in GitHub
+1. Define a variable for the webhook URL
+
+```
+WEBHOOK_URL="https://cloudbuild.googleapis.com/v1/projects/${PROJECT_ID}/triggers/${TRIGGER_NAME}:webhook?key=${API_KEY_VALUE}&secret=${SECRET_VALUE}"
+```
+
+2. Configure the webhook in GitHub
 
 ```
 $BASE_DIR/scripts/git/gh.sh create_webhook ${APP_NAME} $WEBHOOK_URL
  
 ```
 
-2. Go to the application repo and review the newly configured webhook
+3. Go to the application repo and review the newly configured webhook
 
 ```
 REPO_URL=${GIT_BASE_URL}/${APP_NAME}/settings/hooks

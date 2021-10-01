@@ -40,6 +40,8 @@ git config --global user.email $(gcloud config get-value account)
 git config --global user.name ${USER}
 source $SCRIPTS/git/set-git-env.sh
 
+source $SCRIPTS/common/set-apikey-var.sh
+
 # Repo Names
 export REPO_PREFIX=mcd
 export APP_TEMPLATES_REPO=$REPO_PREFIX-app-templates
@@ -47,7 +49,8 @@ export SHARED_KUSTOMIZE_REPO=$REPO_PREFIX-shared_kustomize
 export CLUSTER_CONFIG_REPO=$REPO_PREFIX-cluster-config
 export HYDRATED_CONFIG_REPO=${CLUSTER_CONFIG_REPO}
 
-
+# Repository Name
+export IMAGE_REPO=gcr.io/${PROJECT_ID}
 
 # variable pass through for access tokens
 export GIT_ASKPASS=$SCRIPTS/git/git-ask-pass.sh
