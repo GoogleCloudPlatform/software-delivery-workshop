@@ -52,9 +52,7 @@ source ./onboard-env.sh
 
 ## Prep Github sample
 
-./demo/create-template-repos.sh
-
-
+./demo/template-repos.sh create
 
 
 
