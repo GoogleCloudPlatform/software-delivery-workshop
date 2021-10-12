@@ -1,0 +1,33 @@
+apiVersion: deploy.cloud.google.com/v1beta1
+kind: Target
+metadata:
+  name: stage
+  annotations: {}
+  labels: {}
+description: Target for preview environment
+gke:
+  cluster: projects/crg-sdw-10-12-2021-1/locations/us-central1-a/clusters/stage
+
+---
+
+apiVersion: deploy.cloud.google.com/v1beta1
+kind: Target
+metadata:
+  name: preview
+  annotations: {}
+  labels: {}
+description: Target for preview environment
+gke:
+  cluster: projects/crg-sdw-10-12-2021-1/locations/us-central1-b/clusters/preview
+
+---
+
+apiVersion: deploy.cloud.google.com/v1beta1
+kind: Target
+metadata:
+  name: prod
+  annotations: {}
+  labels: {}
+description: Target for preview environment
+gke:
+  cluster: projects/crg-sdw-10-12-2021-1/locations/us-central1-c/clusters/prod
