@@ -62,6 +62,10 @@ cd $BASE_DIR
 export APP_NAME=demo-app
 ./app.sh create ${APP_NAME}
 
+## View Builds
+
+https://console.cloud.google.com/cloud-build/triggers
+https://console.cloud.google.com/cloud-build/builds
 
 ## Get App Src
 
@@ -73,3 +77,7 @@ cd ${WORK_DIR}/${APP_NAME}
 
 
 ## Push
+
+
+## Promote
+https://console.cloud.google.com/deploy
