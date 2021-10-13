@@ -232,7 +232,7 @@ The job requires a few key values to be provided on creation in order to properl
 
 ```
 export TRIGGER_NAME=${APP_NAME}-clouddeploy-webhook-trigger
-export BUILD_YAML_PATH=$WORK_DIR/app-templates/golang/cloudbuild-build-only.yaml
+export BUILD_YAML_PATH=$WORK_DIR/app-templates/golang/build/cloudbuild-build-only.yaml
 ```
 
 2. Define the location of the shared base configuration repo. 
@@ -303,7 +303,7 @@ cd $BASE_DIR
 2. Create a new application
 
 ```
-./app.sh create demo-app
+./app.sh create demo-app golang
 ```
 
 All of the steps are executed automatically.

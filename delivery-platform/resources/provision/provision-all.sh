@@ -100,12 +100,3 @@ cd ${BASE_DIR}/resources/provision/management-tools/acm
 ./acm-install.sh
 cd $BASE_DIR
 
-# Install Tekton 
-cd ${BASE_DIR}/resources/provision/management-tools
-./tekton-install.sh
-cd $BASE_DIR
-
-# Install Argo 
-cd ${BASE_DIR}/resources/provision/management-tools
-./argo-install.sh
-cd $BASE_DIR
