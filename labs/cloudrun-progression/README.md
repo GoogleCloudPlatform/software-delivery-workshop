@@ -1,4 +1,4 @@
-# Canary Deployments with Cloud Run and CLoud Build
+# Canary Deployments with Cloud Run and Cloud Build
 
 This document shows you how to implement a deployment pipeline for
 Cloud Run that implements progression of code from developer
