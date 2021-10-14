@@ -270,10 +270,10 @@ URL and it routes 10% of all live traffic to the new revision.
 
     [Go to Revisions](https://console.cloud.google.com/run/detail/us-central1/hello-cloudrun/revisions)
 
-    As the following screenshot shows, 90% of the traffic is routed to `prod`,
+    Now 90% of the traffic is routed to `prod`,
     10% to `canary`, and 0% to the branch revisions.
 
-    ![Traffic for the canary deployment in the Revisions page.](images/implementing-cloud-run-canary-deployments-git-branches-cloud-build-canary-revisions.png)
+
 6.  Review the lines of `master-cloudbuild.yaml` that implement the logic for
     the canary deployment.
 
@@ -370,10 +370,10 @@ production traffic.
 
     [Go to Revisions](https://console.cloud.google.com/run/detail/us-central1/hello-cloudrun/revisions)
 
-    As the following screenshot shows, the revision is updated to indicate the
+    The revision is updated to indicate the
     `prod` tag and it is serving 100% of live traffic.
 
-    ![Traffic for the production deployment in the Revisions page.](images/implementing-cloud-run-canary-deployments-git-branches-cloud-build-production-revisions.png)
+    
 6.  In Cloud Shell, to see percentage-based responses, make a
     series of requests:
 
