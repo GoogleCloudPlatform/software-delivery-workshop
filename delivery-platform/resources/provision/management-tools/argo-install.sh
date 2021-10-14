@@ -33,18 +33,6 @@ PORT_FWD_PID=$!
 # Argo UI http://localhost:8080
 argocd login localhost:8080 --insecure --username=$USER --password=$PASSWORD
 
-gcloud container clusters get-credentials dev --region us-west1-a --project $PROJECT_ID
-kubectl config delete-context dev
-kubectl config rename-context gke_${PROJECT_ID}_us-west1-a_dev dev
-
-gcloud container clusters get-credentials stage --region us-west2-a --project $PROJECT_ID
-kubectl config delete-context stage
-kubectl config rename-context gke_${PROJECT_ID}_us-west2-a_stage stage
-
-gcloud container clusters get-credentials prod --region us-central1-a --project $PROJECT_ID
-kubectl config delete-context prod
-kubectl config rename-context gke_${PROJECT_ID}_us-central1-a_prod prod
-
 argocd cluster add dev
 argocd cluster add stage
 argocd cluster add prod
