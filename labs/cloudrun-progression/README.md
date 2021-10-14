@@ -29,7 +29,7 @@ little effort.
     export PROJECT_ID=$(gcloud config get-value project)
     export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
     ```
-1.  Enable the following APIs:
+2.  Enable the following APIs:
 
     - Resource Manager
     - GKE
@@ -47,7 +47,7 @@ little effort.
       containerregistry.googleapis.com \
       run.googleapis.com
     ```
-1.  Grant the Cloud Run Admin role (`roles/run.admin`) to
+3.  Grant the Cloud Run Admin role (`roles/run.admin`) to
     the Cloud Build service account:
 
     ```sh
@@ -55,7 +55,7 @@ little effort.
       --member=serviceAccount:$PROJECT_NUMBER@cloudbuild.gserviceaccount.com \
       --role=roles/run.admin
     ```
-1.  Grant the IAM Service Account User role
+4.  Grant the IAM Service Account User role
     (`roles/iam.serviceAccountUser`) to the Cloud Build service
     account for the Cloud Run runtime service account:
 
@@ -65,14 +65,14 @@ little effort.
       --member=serviceAccount:$PROJECT_NUMBER@cloudbuild.gserviceaccount.com \
       --role=roles/iam.serviceAccountUser
     ```
-1.  If you haven't used Git in Cloud Shell previously, set the
+5.  If you haven't used Git in Cloud Shell previously, set the
     `user.name` and `user.email` values that you want to use:
 
     ```sh
     git config --global user.email "YOUR_EMAIL_ADDRESS"
     git config --global user.name "YOUR_USERNAME"
     ```
-1.  Clone and prepare the sample repository:
+6.  Clone and prepare the sample repository:
 
     ```sh
     git clone https://github.com/GoogleCloudPlatform/software-delivery-workshop cloudrun-progression
@@ -80,14 +80,14 @@ little effort.
     cd cloudrun-progression/labs/cloudrun-progression
     rm -rf ../../.git
     ```
-1.  Replace placeholder values in the sample repository with your `PROJECT_ID`:
+7.  Replace placeholder values in the sample repository with your `PROJECT_ID`:
 
     ```sh
     sed "s/PROJECT/${PROJECT_ID}/g" branch-trigger.json-tmpl > branch-trigger.json
     sed "s/PROJECT/${PROJECT_ID}/g" master-trigger.json-tmpl > master-trigger.json
     sed "s/PROJECT/${PROJECT_ID}/g" tag-trigger.json-tmpl > tag-trigger.json
     ```
-1.  Store the code from the sample repository in CSR:
+8.  Store the code from the sample repository in CSR:
 
     ```sh
     gcloud source repos create cloudrun-progression
@@ -133,14 +133,14 @@ you use throughout this tutorial.
 
     The output includes the service URL and a unique URL for the revision. Your
     values will differ slightly from what's indicated here.
-1.  After the deployment is complete, view the newly deployed service on
+2.  After the deployment is complete, view the newly deployed service on
     the
     [Revisions page](https://console.cloud.google.com/run/detail/us-central1/hello-cloudrun/revisions)
     in the Console.
 
     [Go to Revisions](https://console.cloud.google.com/run/detail/us-central1/hello-cloudrun/revisions)
 
-1.  In Cloud Shell, view the authenticated service response:
+3.  In Cloud Shell, view the authenticated service response:
 
     ```sh
     PROD_URL=$(gcloud run services describe hello-cloudrun \
@@ -165,49 +165,49 @@ URL.
     gcloud beta builds triggers create cloud-source-repositories \
       --trigger-config branch-trigger.json
     ```
-1.  To review the trigger, go to the
+2.  To review the trigger, go to the
     [Cloud Build Triggers page](https://console.cloud.google.com/cloud-build/triggers)
     in the Console.
 
     [Go to Triggers](https://console.cloud.google.com/cloud-build/triggers)
 
-1.  In Cloud Shell, create a new branch:
+3.  In Cloud Shell, create a new branch:
 
     ```sh
     git checkout -b new-feature-1
     ```
-1.  Open the sample application in the Cloud Shell:
+4.  Open the sample application in the Cloud Shell:
 
     ```sh
     edit app.py
     ```
-1.  In the sample application, modify the code to indicate v1.1 instead of v1.0:
+5.  In the sample application, modify the code to indicate v1.1 instead of v1.0:
 
     ```py
     @app.route('/')
     def hello_world():
         return 'Hello World v1.1'
     ```
-1.  To return to your terminal, click **Open Terminal**.
-1.  In Cloud Shell, commit the change and push to the remote
+6.  To return to your terminal, click **Open Terminal**.
+7.  In Cloud Shell, commit the change and push to the remote
     repository:
 
     ```sh
     git add . && git commit -m "updated" && git push gcp new-feature-1
     ```
-1.  To review the build in progress, go to the
+8.  To review the build in progress, go to the
     [Cloud Build Builds page](https://console.cloud.google.com/cloud-build/builds)
     in the Console.
 
     [Go to Builds](https://console.cloud.google.com/cloud-build/builds)
 
-1.  After the build completes, to review the new revision, go to the
+9.  After the build completes, to review the new revision, go to the
     [Cloud Run Revisions page](https://console.cloud.google.com/run/detail/us-central1/hello-cloudrun/revisions)
     in the Console.
 
     [Go to Revisions](https://console.cloud.google.com/run/detail/us-central1/hello-cloudrun/revisions)
 
-1.  In Cloud Shell, get the unique URL for this branch:
+10.  In Cloud Shell, get the unique URL for this branch:
 
     ```sh
     BRANCH_URL=$(gcloud run services describe hello-cloudrun  \
@@ -218,7 +218,7 @@ URL.
     echo $BRANCH_URL
     ```
 
-1.  Access the authenticated URL:
+11.  Access the authenticated URL:
 
     ```sh
     curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" $BRANCH_URL
@@ -244,13 +244,13 @@ URL and it routes 10% of all live traffic to the new revision.
     gcloud beta builds triggers create cloud-source-repositories \
       --trigger-config master-trigger.json
     ```
-1.  To review the new trigger, go to the
+2.  To review the new trigger, go to the
     [Cloud Build Triggers page](https://console.cloud.google.com/cloud-build/triggers)
     in the Console.
 
     [Go to Triggers](https://console.cloud.google.com/cloud-build/triggers)
 
-1.  In Cloud Shell, merge the branch to the main line and push to
+3.  In Cloud Shell, merge the branch to the main line and push to
     the remote repository:
 
     ```sh
@@ -258,13 +258,13 @@ URL and it routes 10% of all live traffic to the new revision.
     git merge new-feature-1
     git push gcp master
     ```
-1.  To review the build in progress, go to the
+4.  To review the build in progress, go to the
     [Cloud Build Builds page](https://console.cloud.google.com/cloud-build/builds)
     in the Console.
 
     [Go to Builds](https://console.cloud.google.com/cloud-build/builds)
 
-1.  After the build is complete, to review the new revision, go to the
+5.  After the build is complete, to review the new revision, go to the
     [Cloud Run Revisions page](https://console.cloud.google.com/run/detail/us-central1/hello-cloudrun/revisions)
     in the Console.
 
@@ -274,7 +274,7 @@ URL and it routes 10% of all live traffic to the new revision.
     10% to `canary`, and 0% to the branch revisions.
 
     ![Traffic for the canary deployment in the Revisions page.](images/implementing-cloud-run-canary-deployments-git-branches-cloud-build-canary-revisions.png)
-1.  Review the lines of `master-cloudbuild.yaml` that implement the logic for
+6.  Review the lines of `master-cloudbuild.yaml` that implement the logic for
     the canary deployment.
 
     The following lines deploy the new revision and use the `tag` flag to route
@@ -300,7 +300,7 @@ URL and it routes 10% of all live traffic to the new revision.
     ```sh 
     gcloud run services update-traffic  ${_SERVICE_NAME} --to-revisions=$${PROD}=90,$${CANARY}=10  --platform managed  --region ${_REGION}
     ```
-1.  In Cloud Shell, get the unique URL for the canary revision:
+7.  In Cloud Shell, get the unique URL for the canary revision:
 
     ```sh
     CANARY_URL=$(gcloud run services describe hello-cloudrun \
@@ -310,12 +310,12 @@ URL and it routes 10% of all live traffic to the new revision.
       --raw-output ".status.traffic[] | select (.tag==\"canary\")|.url")
     echo $CANARY_URL
     ```
-1.  Review the canary endpoint directly:
+8.  Review the canary endpoint directly:
 
     ```sh
     curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" $CANARY_URL
     ```
-1.  To see percentage-based responses, make a series of requests:
+9.  To see percentage-based responses, make a series of requests:
 
     ```sh
     LIVE_URL=$(gcloud run services describe hello-cloudrun \
@@ -346,25 +346,25 @@ production traffic.
     gcloud beta builds triggers create cloud-source-repositories \
       --trigger-config tag-trigger.json
     ```
-1.  To review the new trigger, go to the
+2.  To review the new trigger, go to the
     [Cloud Build Triggers page](https://console.cloud.google.com/cloud-build/triggers)
     in the Console.
 
     [Go to Triggers](https://console.cloud.google.com/cloud-build/triggers)
 
-1.  In Cloud Shell, create a new tag and push to the remote repository:
+3.  In Cloud Shell, create a new tag and push to the remote repository:
 
     ```sh
     git tag 1.1
     git push gcp 1.1
     ```
-1.  To review the build in progress, go to the
+4.  To review the build in progress, go to the
     [Cloud Build Builds page](https://console.cloud.google.com/cloud-build/builds)
     in the Console.
 
     [Go to Builds](https://console.cloud.google.com/cloud-build/builds)
 
-1.  After the build is complete, to review the new revision, go to the
+5.  After the build is complete, to review the new revision, go to the
     [Cloud Run Revisions page](https://console.cloud.google.com/run/detail/us-central1/hello-cloudrun/revisions)
     in the Console.
 
@@ -374,7 +374,7 @@ production traffic.
     `prod` tag and it is serving 100% of live traffic.
 
     ![Traffic for the production deployment in the Revisions page.](images/implementing-cloud-run-canary-deployments-git-branches-cloud-build-production-revisions.png)
-1.  In Cloud Shell, to see percentage-based responses, make a
+6.  In Cloud Shell, to see percentage-based responses, make a
     series of requests:
 
     ```sh
@@ -388,7 +388,7 @@ production traffic.
         curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" $LIVE_URL; echo \n
     Done
     ```
-1.  Review the lines of `tag-cloudbuild.yaml` that implement the production
+7.  Review the lines of `tag-cloudbuild.yaml` that implement the production
     deployment logic.
 
     The following line updates the canary revision adding the `prod` tag. The
