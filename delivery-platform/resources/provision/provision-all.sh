@@ -95,6 +95,20 @@ cd ${BASE_DIR}/resources/provision/clusters/tf
 gcloud builds submit
 cd $BASE_DIR
 
+# Rename contexts
+gcloud container clusters get-credentials dev --region us-west1-a --project $PROJECT_ID
+kubectl config delete-context dev
+kubectl config rename-context gke_${PROJECT_ID}_us-west1-a_dev dev
+
+gcloud container clusters get-credentials stage --region us-west2-a --project $PROJECT_ID
+kubectl config delete-context stage
+kubectl config rename-context gke_${PROJECT_ID}_us-west2-a_stage stage
+
+gcloud container clusters get-credentials prod --region us-central1-a --project $PROJECT_ID
+kubectl config delete-context prod
+kubectl config rename-context gke_${PROJECT_ID}_us-central1-a_prod prod
+
+
 # Install ACM 
 cd ${BASE_DIR}/resources/provision/management-tools/acm
 ./acm-install.sh
