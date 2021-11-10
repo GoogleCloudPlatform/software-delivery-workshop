@@ -303,7 +303,8 @@ cd $BASE_DIR
 2. Create a new application
 
 ```
-./app.sh create demo-app golang
+export APP_NAME=demo-app
+./app.sh create ${APP_NAME}
 ```
 
 All of the steps are executed automatically.
