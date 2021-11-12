@@ -302,7 +302,7 @@ cd $BASE_DIR
 
 2. Create a new application
 
-The format is app.sh create <app-name> <template-dir>
+The format is `app.sh create <app-name> <template-dir>`
   
 ```
 ./app.sh create demo-app golang
