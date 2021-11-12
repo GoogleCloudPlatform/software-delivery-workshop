@@ -51,6 +51,7 @@ create () {
     printf 'Creating application: %s \n' $APP_NAME
 
     # Create an instance of the template.
+    rm -rf $WORK_DIR/app-templates
     cd $WORK_DIR/
     git clone -b main $GIT_BASE_URL/$APP_TEMPLATES_REPO app-templates
     rm -rf app-templates/.git
@@ -78,12 +79,12 @@ create () {
     
     # Initial deploy
     cd $WORK_DIR/app-templates/${APP_LANG}
-    git pull
+    git pull origin main
     echo "v1" > version.txt
     git add . && git commit -m "v1" 
     git push origin main
     sleep 10
-    git pull
+    git pull origin main
     git tag v1
     git push origin v1
 
