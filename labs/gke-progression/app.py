@@ -1,3 +1,5 @@
+#!/usr/bin/python
+#
 # Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,23 +13,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 
+from flask import Flask
 
-# Use the official lightweight Python image.
-# https://hub.docker.com/_/python
-FROM python:3.7-slim
+app = Flask(__name__)
 
-# Copy local code to the container image.
-ENV APP_HOME /app
-WORKDIR $APP_HOME
+@app.route('/')
+def hello_world():
+    return 'Hello World v1.0'
 
-COPY . ./
-
-# Install production dependencies.
-RUN pip install Flask gunicorn
-
-# Run the web service on container startup. Here we use the gunicorn
-# webserver, with one worker process and 8 threads.
-# For environments with multiple CPU cores, increase the number of workers
-# to be equal to the cores available.
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app
+if __name__ == "__main__":
+    app.run(debug=True,host='0.0.0.0',port=int(os.environ.get('PORT', 8080)))
