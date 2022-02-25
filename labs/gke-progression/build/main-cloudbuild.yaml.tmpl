@@ -22,8 +22,7 @@ steps:
     args: 
       - '-c'
       - |
-          docker build -t gcr.io/$PROJECT_ID/gceme:$TAG_NAME .
-
+          docker build -t gcr.io/$PROJECT_ID/$APP_NAME:${SHORT_SHA} ./src
 
 
 ### Test
@@ -36,7 +35,7 @@ steps:
     args: 
       - '-c'
       - |
-          docker push gcr.io/$PROJECT_ID/gceme:$TAG_NAME
+          docker push gcr.io/$PROJECT_ID/$APP_NAME:${SHORT_SHA}
 
 
 
@@ -44,27 +43,21 @@ steps:
   - id: 'deploy'
     name: 'gcr.io/cloud-builders/gcloud'
     env:
-      - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
-      - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
       - 'KUBECONFIG=/kube/config'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-          CLUSTER=$$(gcloud config get-value container/cluster)
-          PROJECT=$$(gcloud config get-value core/project)
-          ZONE=$$(gcloud config get-value compute/zone)
-          
+          PROJECT=$$(gcloud config get-value core/project)          
 
-          gcloud container clusters get-credentials "$${CLUSTER}" \
+          gcloud container clusters get-credentials "${_CLUSTER}" \
             --project "$${PROJECT}" \
-            --zone "$${ZONE}"  
+            --zone "${_ZONE}"  
 
 
-
-          sed -i 's|gcr.io/cloud-solutions-images/gceme:.*|gcr.io/$PROJECT_ID/gceme:$TAG_NAME|' ./kubernetes/deployments/prod/*.yaml
+          sed -i 's|gcr.io/$PROJECT_ID/$APP_NAME:.*|gcr.io/$PROJECT_ID/$APP_NAME:${SHORT_SHA}|' ./k8s/deployments/canary/*.yaml
           
           kubectl get ns production || kubectl create ns production
-          kubectl apply --namespace production --recursive -f kubernetes/deployments/prod
-          kubectl apply --namespace production --recursive -f kubernetes/services
+          kubectl apply --namespace production --recursive -f k8s/deployments/canary
+          kubectl apply --namespace production --recursive -f k8s/services
 
