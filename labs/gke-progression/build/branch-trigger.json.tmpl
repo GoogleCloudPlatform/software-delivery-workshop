@@ -1,0 +1,16 @@
+{
+  "name": "branch",
+  "description": "Trigger dev build/deploy for any branch other than master",
+  "filename": "build/branch-cloudbuild.yaml",
+
+  "triggerTemplate": {
+    "projectId": "$PROJECT_ID",
+    "repoName": "gke-progression",
+    "branchName": "main",
+    "invertRegex": true
+  },
+   "substitutions": {
+    "_ZONE": "${ZONE}",
+    "_CLUSTER": "${CLUSTER}"
+  }
+}

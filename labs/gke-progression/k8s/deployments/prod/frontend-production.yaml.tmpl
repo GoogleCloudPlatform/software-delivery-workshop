@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc. All rights reserved.
+# Copyright 2021 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,35 +15,33 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: gceme-backend-production
+  name: $APP_NAME-production
 spec:
+  replicas: 3
   selector:
     matchLabels:
-      app: gceme 
-      role: backend
+      app: $APP_NAME
+      role: frontend
       env: production
-  replicas: 1
   template:
     metadata:
-      name: backend
+      name: frontend
       labels:
-        app: gceme
-        role: backend
+        app: $APP_NAME
+        role: frontend
         env: production
     spec:
       containers:
-      - name: backend
-        image: gcr.io/cloud-solutions-images/gceme:1.0.0
+      - name: frontend
+        image: gcr.io/$PROJECT_ID/$APP_NAME:1.0.0
+        imagePullPolicy: Always
         resources:
           limits:
             memory: "500Mi"
             cpu: "100m"
-        imagePullPolicy: Always
-        readinessProbe:
-          httpGet:
-            path: /healthz
-            port: 8080
-        command: ["sh", "-c", "app -port=8080"]
         ports:
-        - name: backend
+        - name: frontend
           containerPort: 8080
+        env:
+          - name: PORT
+            value: "8080"
