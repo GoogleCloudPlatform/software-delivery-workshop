@@ -1,6 +1,7 @@
 # Continuous deployment to Google Kubernetes Engine (GKE) with Cloud Build
 
 
+<<<<<<< HEAD
 ## Overview
 
 
@@ -95,6 +96,102 @@ You'll complete the following steps:
 Your environment is ready!
 
 
+=======
+
+
+## Overview
+
+
+In this lab, you'll learn to set up a continuous delivery pipeline for GKE with Cloud Build. You'll complete the following steps:
+
+* Create the GKE Application
+* Automate deployments for git branches
+* Automate deployments for git main branch
+* Automating deployments for git tags
+
+
+## Preparing your environment
+
+1.  In Cloud Shell, create environment variables to use throughout this tutorial:
+
+    ```sh
+    export PROJECT_ID=$(gcloud config get-value project)
+    export PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format='value(projectNumber)')
+
+
+    export ZONE=us-central1-b
+    export CLUSTER=gke-progression-cluster
+    export APP_NAME=myapp
+    ```
+
+2.  Enable the following APIs:
+
+    - Resource Manager
+    - GKE
+    - Cloud Source Repositories
+    - Cloud Build
+    - Container Registry
+
+
+
+    ```sh
+    gcloud services enable \
+        cloudresourcemanager.googleapis.com \
+        container.googleapis.com \
+        sourcerepo.googleapis.com \
+        cloudbuild.googleapis.com \
+        containerregistry.googleapis.com \
+        --async
+    ```
+
+
+3.  Clone the sample source:
+
+    ```sh
+    git clone https://github.com/GoogleCloudPlatform/software-delivery-workshop.git gke-progression
+
+    cd gke-progression/labs/gke-progression
+    rm -rf ../../.git
+    ```
+
+4.  Replace placeholder values in the sample repository with your `PROJECT_ID`:
+
+    ```sh
+    for template in $(find . -name '*.tmpl'); do envsubst '${PROJECT_ID} ${ZONE} ${CLUSTER} ${APP_NAME}' < ${template} > ${template%.*}; done
+    ```
+
+5.  Store the code from the sample repository in CSR:
+
+    ```sh
+    gcloud source repos create gke-progression
+    git init
+    git config credential.helper gcloud.sh
+    git remote add gcp https://source.developers.google.com/p/$PROJECT_ID/r/gke-progression
+    git branch -m main
+    git add . && git commit -m "initial commit"
+    git push gcp main
+    ```
+
+6. Create your GKE cluster.
+
+    ```sh
+    gcloud container clusters create ${CLUSTER} \
+        --project=${PROJECT_ID} \
+        --zone=${ZONE} 
+    ```
+
+
+7. Give Cloud Build rights to your cluster.
+    ```sh
+    gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+        --member=serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com \
+        --role=roles/container.developer
+    ```
+
+Your environment is ready!
+
+
+>>>>>>> main
 ## Creating your GKE Application
 
 In this section, you build and deploy the initial production application that you use throughout this tutorial.
@@ -107,24 +204,38 @@ In this section, you build and deploy the initial production application that yo
 
 2.  Manually deploy to Canary and Production environments:
 
+<<<<<<< HEAD
     Create the production and canary deployments and services using the `kubectl apply` commands.
 
     ```sh
+=======
+
+    Create the production and canary deployments and services using the `kubectl apply` commands.
+
+    ```console
+>>>>>>> main
     kubectl create ns production
     kubectl apply -f k8s/deployments/prod -n production
     kubectl apply -f k8s/deployments/canary -n production
     kubectl apply -f k8s/services -n production
     ```
 
+<<<<<<< HEAD
     The service deployed here will route traffic to both the canary and prod deployments.
 
+=======
+>>>>>>> main
 
 3. Review number of running pods
 
     Confirm that you have four Pods running for the frontend, including three for production traffic and one for canary releases. That means that changes to your canary release will only affect 1 out of 4 (25%) of users. 
 
 
+<<<<<<< HEAD
     ```sh
+=======
+    ```console
+>>>>>>> main
     kubectl get pods -n production -l app=$APP_NAME -l role=frontend
     ```
 
@@ -156,6 +267,7 @@ In this section, you build and deploy the initial production application that yo
 Congratulations! You deployed the sample app! Next, you'll set up a pipeline for continuously and deploying your changes.
 
 
+<<<<<<< HEAD
 ## Automating deployments for git branches
 
 In this section you will set up a trigger that will execute a Cloudbuild job on commit of any branch other than `main`. The Cloud Build file used here will automatically create a namespace and deployment for any existing or new branches, allowing developers to preview their code before integration with the main branch. 
@@ -186,6 +298,15 @@ In this section you will set up a trigger that will execute a Cloudbuild job on 
 
 
     Now that you understand the mechanisms in use, create the trigger with the gcloud command below. 
+=======
+
+
+
+## Automating deployments for git branches
+
+1.  Set up the trigger:
+
+>>>>>>> main
     ```sh
     gcloud beta builds triggers create cloud-source-repositories \
       --trigger-config build/branch-trigger.json
@@ -254,9 +375,16 @@ In this section you will set up a trigger that will execute a Cloudbuild job on 
 
 ## Automate deployments for git main branch
 
+<<<<<<< HEAD
 Before code is released to production, it's common to release code to a small subset of live traffic before migrating all traffic to the new code base.
 
 In this section, you implement a trigger that is activated when code is committed to the main branch. The trigger deploys the canary deployment which receives 25% of all live traffic to the new revision.
+=======
+
+When code is released to production, it's common to release code to a small subset of live traffic before migrating all traffic to the new code base.
+
+In this section, you implement a trigger that is activated when code is committed to the main branch. The trigger deploys the code to a unique canary URL and it routes 10% of all live traffic to the new revision.
+>>>>>>> main
 
 1.  Set up the trigger for the main branch:
 
@@ -289,15 +417,26 @@ In this section, you implement a trigger that is activated when code is committe
 
     Once the build has completed continue to the next step
 
+<<<<<<< HEAD
 5. Review multiple responses from the server
 
     Run the following command and note that approximately 25% of the responses are showing the new response of Hello World v1.1
+=======
+5. Review mulitple responses from the server
+
+    Run the following command and note that approxomatly 25% of the responses are showing the new response of Hello World v1.1
+>>>>>>> main
 
     ```sh
     while true; do curl -w "\n" http://$PRODUCTION_IP; sleep 1;  done
     ```
 
+<<<<<<< HEAD
     When you're ready to continue press `Ctrl+c` to exit out of the loop. 
+=======
+    When you're ready to continue pres `Ctrl+c` to exit out of the loop. 
+
+>>>>>>> main
 
 ## Automating deployments for git tags
 
@@ -330,7 +469,12 @@ In this section, you set up a trigger that is activated when you create a tag in
 
     [Go to Builds](https://console.cloud.google.com/cloud-build/builds)
 
+<<<<<<< HEAD
 5. Review multiple responses from the server
+=======
+
+5. Review mulitple responses from the server
+>>>>>>> main
 
     Run the following command and note that 100% of the responses are showing the new response of Hello World v1.1
 
@@ -340,6 +484,12 @@ In this section, you set up a trigger that is activated when you create a tag in
     while true; do curl -w "\n" http://$PRODUCTION_IP; sleep 1;  done
     ```
 
+<<<<<<< HEAD
     When you're ready to continue press `Ctrl+c` to exit out of the loop. 
     
+=======
+    When you're ready to continue pres `Ctrl+c` to exit out of the loop. 
+    
+
+>>>>>>> main
     Congratulations! You created CI/CD triggers in Cloud Build for branches and tags to deploy your apps to GKE.
