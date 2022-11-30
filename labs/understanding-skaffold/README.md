@@ -113,7 +113,7 @@ As well as this, in this section you can see the reference to the `Dockerfile`
 to be used to build the images. Skaffold additionally supports other build
 tools such as `Jib`, `Maven`, `Gradle`, Cloud-native `Buildpacks`, `Bazel` and
 custom scripts. You can read more about this configuration in the [Skaffold
-Build documentation]().
+Build documentation](https://skaffold.dev/docs/pipeline-stages/builders/).
 
 # Deploy
 
