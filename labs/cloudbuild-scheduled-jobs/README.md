@@ -92,13 +92,15 @@ TRIGGER_NAME=custom-image-trigger
 gcloud beta builds triggers create manual \
   --region=us-central1 \
   --name=${TRIGGER_NAME} \
-  --repo=${GITHUB_USER}/${GITHUB_REPO} \
+  --repo=${GITHUB_USER}/software-delivery-workshop \
   --repo-type=GITHUB \
-  --branch=master \
+  --branch=main \
   --build-config=code-oss-java/cloudbuild.yaml \
   --substitutions=_REGION=us-central1,_AR_REPO_NAME=,_AR_IMAGE_NAME=code-oss-java,_IMAGE_DIR=labs/cloudbuild-scheduled-jobs/code-oss-java
 
-TRIGGER_ID=$(gcloud beta builds triggers list --filter=name="${TRIGGER_NAME}" --format="value(id)")
+TRIGGER_ID=$(gcloud beta builds triggers list --region=us-central1 \
+   --filter=name="${TRIGGER_NAME}" --format="value(id)")
+
 ```
 
 ## Cloud Scheduler
@@ -132,3 +134,4 @@ To see the vulnerabilities in an image:
 To view the list of vulnerabilities for an image:
 - click the link in the Vulnerabilities column
 - The vulnerability list shows the severity, availability of a fix, and the name of the package that contains the vulnerability.
+
