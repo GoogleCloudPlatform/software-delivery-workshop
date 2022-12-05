@@ -95,8 +95,8 @@ gcloud beta builds triggers create manual \
   --repo=${GITHUB_USER}/software-delivery-workshop \
   --repo-type=GITHUB \
   --branch=main \
-  --build-config=code-oss-java/cloudbuild.yaml \
-  --substitutions=_REGION=us-central1,_AR_REPO_NAME=,_AR_IMAGE_NAME=code-oss-java,_IMAGE_DIR=labs/cloudbuild-scheduled-jobs/code-oss-java
+  --build-config=labs/cloudbuild-scheduled-jobs/code-oss-java/cloudbuild.yaml \
+  --substitutions=_REGION=us-central1,_AR_REPO_NAME=custom-images,_AR_IMAGE_NAME=code-oss-java,_IMAGE_DIR=labs/cloudbuild-scheduled-jobs/code-oss-java
 
 TRIGGER_ID=$(gcloud beta builds triggers list --region=us-central1 \
    --filter=name="${TRIGGER_NAME}" --format="value(id)")
