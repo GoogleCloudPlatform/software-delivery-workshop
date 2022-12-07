@@ -6,4 +6,4 @@ steps:
   args: ['build', '-t', '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO_NAME}/${_AR_IMAGE_NAME}', './${_IMAGE_DIR}']
   waitFor: ['-']
 images:
-  - '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO_NAME}/${_AR_IMAGE_NAME}'
+- '${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO_NAME}/${_AR_IMAGE_NAME}'
