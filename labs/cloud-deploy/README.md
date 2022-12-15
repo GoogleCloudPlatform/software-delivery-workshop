@@ -208,7 +208,7 @@ skaffold build \
 
 ## Release Phase
 
-At the end of your CICD process, typically when the code is Tagged for production, you will initiate the release process by calling the `cloud deploy release` command. Later once the deployment has been validated and approved you'll  move the release through the various target environments by promoting and approving the action through automated processes or manual approvals. 
+At the end of your CICD process, typically when the code is Tagged for production, you will initiate the release process by calling the `cloud deploy release` command. Later, once the deployment has been validated and approved you'll  move the release through the various target environments by promoting and approving the action through automated processes or manual approvals. 
 
 
 
