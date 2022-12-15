@@ -179,7 +179,7 @@ EOF
 ```
 
 **	**  
-**	**As you noticed, the "kind" tag is "DeliveryPipeline". It lets you define the metadata for the pipeline, a description and an order of deployment into various targets via serialPipeline tag.
+As you noticed, the "kind" tag is "DeliveryPipeline". It lets you define the metadata for the pipeline, a description and an order of deployment into various targets via serialPipeline tag.
 
 `serialPipeline` tag contains a tag named stages which is a list of all targets to which this delivery pipeline is configured to deploy.
 
