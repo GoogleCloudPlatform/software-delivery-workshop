@@ -12,30 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: skaffold/v1beta14
-kind: Config
-build:
-  artifacts:
-  - image: app # Match name in deployment yaml
-    context: ./
-#deploy:
-#  kustomize:
-#    path: k8s/dev
-
-profiles:
-- name: preview
-  activation:
-    - command: preview
-  deploy:
-    kustomize:
-      path: k8s/preview
-
-- name: staging
-  deploy:
-    kustomize:
-      path: k8s/staging
-
-- name: prod
-  deploy:
-    kustomize:
-      path: k8s/prod
+bases:
+- ../../kustomize-base/golang
+patches:
+- deployment.yaml
+commonLabels:
+  app: cloud-deploy-tutorial
+  role: backend
+namePrefix: cloud-deploy-sample-

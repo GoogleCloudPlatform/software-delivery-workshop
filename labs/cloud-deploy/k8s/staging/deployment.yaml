@@ -12,30 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: skaffold/v1beta14
-kind: Config
-build:
-  artifacts:
-  - image: app # Match name in deployment yaml
-    context: ./
-#deploy:
-#  kustomize:
-#    path: k8s/dev
-
-profiles:
-- name: preview
-  activation:
-    - command: preview
-  deploy:
-    kustomize:
-      path: k8s/preview
-
-- name: staging
-  deploy:
-    kustomize:
-      path: k8s/staging
-
-- name: prod
-  deploy:
-    kustomize:
-      path: k8s/prod
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: app
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+      - name: app
+        image: app
+        resources:
+          requests:
+            cpu: 25m
+            memory: 64Mi
+          limits:
+            cpu: 100m
+            memory: 256Mi
+        env:
+        - name: ENVIRONMENT
+          value: staging
