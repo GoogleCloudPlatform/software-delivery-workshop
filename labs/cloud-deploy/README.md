@@ -255,7 +255,7 @@ This will take you to a new page which shows the message "Hello World!"
 
 ### Promoting a release
 
-Now that your  release is deployed to the first target (preview) in the pipeline, you can promote it to the next target (staging). Run the following command to begin the process. 
+Now that your release is deployed to the first target (preview) in the pipeline, you can promote it to the next target (staging). Run the following command to begin the process. 
 
 ```
 gcloud beta deploy releases promote \
