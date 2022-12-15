@@ -3,9 +3,9 @@
 
 ## Objectives
 
-In this tutorial you will create three GKE clusters named preview, canary and prod. Then, create a Cloud Deploy target corresponding to each cluster and a Cloud Deploy pipeline that will define the sequence of steps to perform deployment in those targets. 
+In this tutorial you will create three GKE clusters named preview, staging and prod. Then, create a Cloud Deploy target corresponding to each cluster and a Cloud Deploy pipeline that will define the sequence of steps to perform deployment in those targets. 
 
-The deployment flow will be triggered by a cloudbuild pipeline that will create Cloud Deploy release and perform the deployment in the preview cluster. After you have verified that the deployment in preview was successful and working as expected, you will manually promote the release in the canary cluster. Promotion of the release in the prod cluster will require approval, you will approve the prod pipeline in Cloud Deploy UI and finally promote it.
+The deployment flow will be triggered by a cloudbuild pipeline that will create Cloud Deploy release and perform the deployment in the preview cluster. After you have verified that the deployment in preview was successful and working as expected, you will manually promote the release in the staging cluster. Promotion of the release in the prod cluster will require approval, you will approve the prod pipeline in Cloud Deploy UI and finally promote it.
 
 The objectives of this tutorial can be broken down into the following steps:
 
@@ -47,7 +47,7 @@ gcloud config set deploy/region us-central1
 2. **Clone Repo**
 
 ```
-git clone https://github.com/gushob21/software-delivery-workshop
+git clone https://github.com/GoogleCloudPlatform/software-delivery-workshop
 cd software-delivery-workshop/labs/cloud-deploy/
 cloudshell workspace . 
 rm -rf deploy && mkdir deploy
@@ -77,7 +77,7 @@ cloudresourcemanager.googleapis.com \
 ```
 	gcloud container clusters create preview \
 --zone=us-central1-a  --async
-	gcloud container clusters create canary \
+	gcloud container clusters create staging \
 --zone=us-central1-b  --async
 	gcloud container clusters create prod \
 --zone=us-central1-c
@@ -103,19 +103,19 @@ EOF
 
 	As you noticed, the "kind" tag is "Target". It allows us to add some metadata to the target, a description and finally the GKE cluster where the deployment is supposed to happen for this target.
 
-2. **Create a file in the deploy directory named canary.yaml with the following command in cloudshell:**
+2. **Create a file in the deploy directory named staging.yaml with the following command in cloudshell:**
 
 ```
-cat <<EOF >deploy/canary.yaml
+cat <<EOF >deploy/staging.yaml
 apiVersion: deploy.cloud.google.com/v1beta1
 kind: Target
 metadata:
-  name: canary
+  name: staging
   annotations: {}
   labels: {}
-description: Target for canary environment
+description: Target for staging environment
 gke:
-  cluster: projects/$PROJECT_ID/locations/us-central1-b/clusters/canary
+  cluster: projects/$PROJECT_ID/locations/us-central1-b/clusters/staging
 EOF
 ```
 
@@ -143,7 +143,7 @@ Notice the tag requireApproval which is set to true. This will not allow promoti
 ```
     	gcloud config set deploy/region us-central1 
 gcloud beta deploy apply --file deploy/preview.yaml
-gcloud beta deploy apply --file deploy/canary.yaml
+gcloud beta deploy apply --file deploy/staging.yaml
 gcloud beta deploy apply --file deploy/prod.yaml
 ```
 
@@ -169,9 +169,9 @@ serialPipeline:
   - targetId: preview
     profiles:
     - preview
-  - targetId: canary
+  - targetId: staging
     profiles:
-    - canary
+    - staging
   - targetId: prod
     profiles:
     - prod
@@ -255,7 +255,7 @@ This will take you to a new page which shows the message "Hello World!"
 
 ### Promoting a release
 
-Now that your  release is deployed to the first target (preview) in the pipeline, you can promote it to the next target (canary). Run the following command to begin the process. 
+Now that your  release is deployed to the first target (preview) in the pipeline, you can promote it to the next target (staging). Run the following command to begin the process. 
 
 ```
 gcloud beta deploy releases promote \
@@ -267,12 +267,12 @@ gcloud beta deploy releases promote \
 ### Review the release promotion
 
 1. Go to the [sample-app pipeline in the Google Cloud console](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/sample-app)
-2. Confirm a green outline on the left side of the Canary box which means that the release has been deployed to that environment.
+2. Confirm a green outline on the left side of the staging box which means that the release has been deployed to that environment.
 
 3. Verify the application is deployed correctly by creating a tunnel to it
 
 ```
-gcloud container clusters get-credentials canary --zone us-central1-b && kubectl port-forward --namespace default $(kubectl get pod --namespace default --selector="app=cloud-deploy-tutorial" --output jsonpath='{.items[0].metadata.name}') 8080:8080
+gcloud container clusters get-credentials staging --zone us-central1-b && kubectl port-forward --namespace default $(kubectl get pod --namespace default --selector="app=cloud-deploy-tutorial" --output jsonpath='{.items[0].metadata.name}') 8080:8080
 ```
 
 4. Click on the web preview icon in the upper right of the screen. 
@@ -286,7 +286,7 @@ This will take you to a new page which shows the message "Hello World!"
 
 Remember when we created prod target via prod.yaml, we specified the tag requireApproval as true. This will force a requirement of approval for promotion in prod.
 
-1. Promote the canary release to production  with the following command
+1. Promote the staging release to production  with the following command
 
 ```
 gcloud beta deploy releases promote \
