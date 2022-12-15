@@ -286,7 +286,7 @@ This will take you to a new page which shows the message "Hello World!"
 
 Remember when we created prod target via prod.yaml, we specified the tag requireApproval as true. This will force a requirement of approval for promotion in prod.
 
-1. Promote the staging release to production  with the following command
+1. Promote the staging release to production  with the following command.
 
 ```
 gcloud beta deploy releases promote \
@@ -295,16 +295,16 @@ gcloud beta deploy releases promote \
 --quiet
 ```
 
-2. Go to the [sample-app pipeline in the Google Cloud console](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/sample-app)
+2. Go to the [sample-app pipeline in the Google Cloud console](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/sample-app).
 
 3. Notice the yellow indicator noting "1 pending". 
 
    This message indicates there is a release queued for deployment to production but requires review and approval. 
 
 4. Click on the "Review" button just below the yellow notice.  
-5. In the next screen click "Review" again to access the approval screen for production
+5. In the next screen click "Review" again to access the approval screen for production.
 6. Optionally review  the Manifest Diff to review the changes. In this case a whole new file.  
-7. Click on the "Approve" button 
+7. Click on the "Approve" button .
 8. Return to the [sample-app pipeline page](https://console.cloud.google.com/deploy/delivery-pipelines/us-central1/sample-app) where you will see the release to prod in progress.
 
 ### Review the production release
