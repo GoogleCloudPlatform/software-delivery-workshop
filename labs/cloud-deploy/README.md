@@ -141,7 +141,7 @@ Notice the tag requireApproval which is set to true. This will not allow promoti
 4. **Create the Deploy Targets**
 
 ```
-    	gcloud config set deploy/region us-central1 
+gcloud config set deploy/region us-central1 
 gcloud beta deploy apply --file deploy/preview.yaml
 gcloud beta deploy apply --file deploy/staging.yaml
 gcloud beta deploy apply --file deploy/prod.yaml
