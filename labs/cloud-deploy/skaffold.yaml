@@ -30,10 +30,10 @@ profiles:
     kustomize:
       path: k8s/preview
 
-- name: canary
+- name: staging
   deploy:
     kustomize:
-      path: k8s/canary
+      path: k8s/staging
 
 - name: prod
   deploy:
