@@ -2,13 +2,13 @@
 
 ## Overview
 
-This document shows you how to implement a deployment pipeline for CloudRun that implements progression of code from developer branches to production with automated canary testing and percentage based traffic management. It is intended for platform administrators who are responsible for creating and managing CI/CD pipelines to Google Kubernetes Engine (GKE). This document assumes that you have a basic understanding of Git, CloudRun, and CI/CD pipeline concepts. 
+This document shows you how to implement a deployment pipeline for Cloud Run that implements progression of code from developer branches to production with automated canary testing and percentage based traffic management. It is intended for platform administrators who are responsible for creating and managing CI/CD pipelines to Google Kubernetes Engine (GKE). This document assumes that you have a basic understanding of Git, Cloud Run, and CI/CD pipeline concepts. 
 
-CloudRun lets you deploy and run your applications with little overhead or effort. Many organizations use robust release pipelines to move code into production. CloudRun provides unique traffic management capabilities that let you implement advanced release management techniques with little effort.
+Cloud Run lets you deploy and run your applications with little overhead or effort. Many organizations use robust release pipelines to move code into production. Cloud Run provides unique traffic management capabilities that let you implement advanced release management techniques with little effort.
 
 ### Objectives 
 
--   Create your CloudRun service
+-   Create your Cloud Run service
 -   Enable developer branch
 -   Implement canary testing
 -   Rollout safely to production
@@ -104,7 +104,7 @@ git config --global credential.helper store
 ```
 
 If you're using MFA with GitHub, create a personal access token and use it as your password when interacting with GitHub through the command-line
-- Follow [this link to create an access token](https://github.com/settings/tokens/new?scopes=repo%2Cread%3Auser%2Cread%3Aorg%2Cuser%3Aemail%2Cwrite&description=CloudRun%20Tutorial)
+- Follow [this link to create an access token](https://github.com/settings/tokens/new?scopes=repo%2Cread%3Auser%2Cread%3Aorg%2Cuser%3Aemail%2Cwrite&description=Cloud%20Run%20Tutorial)
 - Leave the tab open 
 
 Store your GitHub ID in an environment variable for easier access
@@ -456,7 +456,7 @@ If you plan to explore multiple tutorials and quickstarts, reusing projects can 
 
 # What's next
 
-- Review [Managing Revisions with CloudRun](https://cloud.google.com/run/docs/managing/revisions).
-- Review CloudRun [Rollbacks, gradual rollouts, and traffic migration](https://cloud.google.com/run/docs/rollouts-rollbacks-traffic-migration)
+- Review [Managing Revisions with Cloud Run](https://cloud.google.com/run/docs/managing/revisions).
+- Review Cloud Run [Rollbacks, gradual rollouts, and traffic migration](https://cloud.google.com/run/docs/rollouts-rollbacks-traffic-migration)
 - Review [Using tags for accessing revisions](https://cloud.google.com/run/docs/rollouts-rollbacks-traffic-migration#tags).
-- Review [Creating and managing build triggers](https://cloud.google.com/build/docs/automating-builds/create-manage-triggers) in CloudBuild.
+- Review [Creating and managing build triggers](https://cloud.google.com/build/docs/automating-builds/create-manage-triggers) in Cloud Build.
