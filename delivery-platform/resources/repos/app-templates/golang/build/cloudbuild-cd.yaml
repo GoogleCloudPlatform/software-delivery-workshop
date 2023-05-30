@@ -1,0 +1,79 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+steps:
+
+  #  Clone the repos
+  - id: clone-app
+    name: gcr.io/cloud-builders/git
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        IFS='/' read -a array <<< "${_REF}"
+        git clone -b ${array[2]} ${_APP_REPO} app-repo
+ 
+  - id: clone-kustomize
+    name: gcr.io/cloud-builders/git
+    entrypoint: bash
+    # changed from GIT_URL to APP_REPO
+    args:
+      - '-c'
+      - |
+        git clone ${_KUSTOMIZE_REPO} kustomize-base
+        sleep 5
+
+  - id: setup-for-clouddeploy
+    name: gcr.io/cloud-builders/git
+    entrypoint: bash
+    args:
+    - '-c'
+    - |
+      cd app-repo
+      find . -name kustomization.yaml -exec sed -i "s?- ../../../kustomize-base?- ../../kustomize-base?g" {} \;
+      cp -r ../kustomize-base .
+
+  #  Build and push the image
+  - id: skaffold-build
+    name: gcr.io/k8s-skaffold/skaffold
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        cd app-repo
+        skaffold build --file-output=/workspace/artifacts.json \
+                               --default-repo ${_DEFAULT_IMAGE_REPO} \
+                               --push=true
+
+  - name: 'google/cloud-sdk:latest'
+    entrypoint: 'sh'
+    args:
+    - -xe
+    - -c
+    - |
+        gcloud config set deploy/region us-central1
+        cd app-repo
+        SHORT_SHA=$(git rev-parse --short HEAD)
+        sed -i s/PROJECT_ID/$PROJECT_ID/g deploy/*
+        gcloud beta deploy apply --file deploy/pipeline.yaml
+        gcloud beta deploy apply --file deploy/stage.yaml
+        gcloud beta deploy apply --file deploy/prod.yaml
+        gcloud beta deploy releases create rel-${SHORT_SHA}-$(date +%s) \
+                            --delivery-pipeline ${_APP_NAME} \
+                            --description "$(git log -1  --pretty='%s')" \
+                            --build-artifacts /workspace/artifacts.json \
+                            --annotations="commit_ui=${_APP_REPO}/+/$COMMIT_SHA"
+
+
+

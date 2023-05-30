@@ -1,2 +1,12 @@
 build_assets/
 TODO.md
+workdir/
+_local/
+
+terraform.tfvars
+backend.tf
+.terraform/
+.talismanrc
+.DS_Store
+
+.firebase/

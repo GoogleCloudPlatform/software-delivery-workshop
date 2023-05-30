@@ -1,0 +1,135 @@
+# Copyright 2021 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+steps:
+  # Create the hydrated directories  
+  - id: create-dirs
+    name: bash
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        mkdir -p app-hydrated/dev
+        mkdir -p app-hydrated/stage
+        mkdir -p app-hydrated/prod
+
+
+  #  Clone the repos
+  - id: clone-app
+    name: gcr.io/cloud-builders/git
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        IFS='/' read -a array <<< "${_REF}"
+        git clone -b ${array[2]} ${_APP_REPO} app-repo
+ 
+  - id: clone-kustomize
+    name: gcr.io/cloud-builders/git
+    entrypoint: bash
+    # changed from GIT_URL to APP_REPO
+    args:
+      - '-c'
+      - |
+        git clone ${_KUSTOMIZE_REPO} kustomize-base
+
+  - id: clone-config
+    name: gcr.io/cloud-builders/git
+    entrypoint: bash
+
+    args:
+      - '-c'
+      - |
+        git clone ${_CONFIG_REPO} config-repo
+ 
+  #  Build and push the image
+  - id: skaffold-build
+    name: gcr.io/k8s-skaffold/skaffold
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        cd app-repo
+        skaffold build --default-repo ${_DEFAULT_IMAGE_REPO}
+
+  #  Render the manifests
+  - id: skaffold-render
+    name: gcr.io/k8s-skaffold/skaffold
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        cd app-repo
+        skaffold render \
+          --default-repo ${_DEFAULT_IMAGE_REPO} \
+          --output ../app-hydrated/stage/resources.yaml
+        
+  #  Deliver the app
+  - id: deliver
+    name: gcr.io/cloud-builders/git
+    secretEnv: ['GH_TOKEN']
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        
+        # Setup auth for commit
+        echo 'exec echo "$$GH_TOKEN"' > ~/git-ask-pass.sh
+        chmod +x ~/git-ask-pass.sh
+        export GIT_ASKPASS=~/git-ask-pass.sh
+        git config --global user.email "CloudBuild@yourcompany.com"
+        git config --global user.name "Cloud Build"
+
+        # Copy the hydrated file to the config repo & push
+        cd config-repo
+        git pull
+
+        # Main, Tag or Branch
+        IFS='/' read -a array <<< "${_REF}"
+      
+        # Tag
+        if [[ ${array[1]} = 'tags' ]] ; then
+          cp ../app-hydrated/stage/resources.yaml \
+            ./prod/namespaces/${_APP_NAME}
+
+        # Main
+        elif [[ ${array[2]} = 'main'  ]] ; then
+          cp ../app-hydrated/stage/resources.yaml \
+            ./stage/namespaces/${_APP_NAME}
+        
+        # Feature Branch 
+        else
+          echo "NOT_IMPLEMENTED: Not deploying feature branches"
+        fi
+
+        git add . && git commit -m "Deploying new image"
+        git push origin main
+
+  # Cleanup the workspace  
+  - id: cleanup
+    name: bash
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        rm -rf app-hydrated
+        rm -rf app-hydrated
+        rm -rf kustomize-base
+
+
+availableSecrets:
+  secretManager:
+  - versionName: projects/$PROJECT_ID/secrets/gh_token/versions/latest
+    env: GH_TOKEN
+
