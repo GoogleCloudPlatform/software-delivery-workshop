@@ -15,7 +15,7 @@
 bases:
 - ../../kustomize-base/golang
 patches:
-- deployment.yaml
+- path: ./deployment.yaml
 namePrefix: cloud-deploy-sample- # App name (dash)
 commonLabels:
   app: cloud-deploy-tutorial # App name for selectors
