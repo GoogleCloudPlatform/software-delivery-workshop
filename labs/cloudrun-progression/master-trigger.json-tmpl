@@ -1,0 +1,11 @@
+{
+  "triggerTemplate": {
+    "projectId": "PROJECT",
+    "repoName": "cloudrun-progression",
+    "branchName": "master"
+  },
+  "name": "master",
+  "description": "Trigger canary build/deploy for any commit to the master branch",
+
+  "filename": "master-cloudbuild.yaml"
+}
